@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /id/
+
+Sitemap: https://juliansphotography.com/id/sitemap-index.xml

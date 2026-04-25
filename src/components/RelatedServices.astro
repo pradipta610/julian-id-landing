@@ -1,0 +1,39 @@
+---
+import { url } from '../utils/url';
+
+interface Related {
+  num: string;
+  name: string;
+  href: string; // path relative to /id/, e.g. '/layanan/wedding/'
+  image: string;
+}
+
+interface Props {
+  label?: string;
+  heading?: string; // HTML
+  items: Related[];
+}
+
+const {
+  label = '— Layanan Lainnya',
+  heading = 'Lihat juga<br /><em>layanan kami yang lain.</em>',
+  items,
+} = Astro.props;
+---
+<section class="related">
+  <div class="related-head">
+    <div class="section-label reveal-up">{label}</div>
+    <h2 class="section-title reveal-up" style="margin:0 auto" set:html={heading}></h2>
+  </div>
+  <div class="related-grid">
+    {items.map((item) => (
+      <a class="related-card" href={url(item.href)} data-hover>
+        <img src={item.image} alt={item.name} loading="lazy" />
+        <div class="related-card-content">
+          <div class="related-card-num">{item.num}</div>
+          <div class="related-card-name">{item.name}</div>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>

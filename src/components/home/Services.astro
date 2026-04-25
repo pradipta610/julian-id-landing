@@ -1,0 +1,99 @@
+---
+import { url } from '../../utils/url';
+import { services } from '../../data/services';
+
+interface ServiceItem {
+  num: string;
+  name: string;
+  desc: string;
+  price?: string;
+  image: string;
+  href: string;
+}
+
+interface ServiceGroup {
+  num: string;
+  name: string; // HTML allowed
+  meta: string;
+  items: ServiceItem[];
+}
+
+interface Props {
+  heading?: string; // HTML
+  intro?: string;
+  groups?: ServiceGroup[];
+}
+
+// Build groups from shared services data so homepage cards link to real detail pages
+function buildItem(slug: string, num: string): ServiceItem {
+  const s = services.find((x) => x.slug === slug)!;
+  return {
+    num,
+    name: s.name,
+    desc: s.desc,
+    price: 'By Request',
+    image: s.image,
+    href: s.href,
+  };
+}
+
+const {
+  heading = 'Layanan kami,<br>untuk setiap <em>babak hidupmu.</em>',
+  intro = 'Dari pelukan pertama bayi yang baru lahir, sampai janji suci di pinggir tebing Uluwatu — Julian Photography menemani setiap momenmu, baik di studio maupun di outdoor.',
+  groups = [
+    {
+      num: 'I',
+      name: 'Luar <em>Studio</em>',
+      meta: 'Outdoor · Bali',
+      items: [
+        buildItem('wedding', '01'),
+        buildItem('prewedding', '02'),
+      ],
+    },
+    {
+      num: 'II',
+      name: 'Dalam <em>Studio</em>',
+      meta: 'Indoor · Jembrana',
+      items: [
+        buildItem('maternity', '03'),
+        buildItem('newborn', '04'),
+        buildItem('baby', '05'),
+        buildItem('baby-family', '06'),
+        buildItem('family', '07'),
+      ],
+    },
+  ],
+} = Astro.props;
+---
+<section class="services" id="layanan">
+  <div class="services-head">
+    <h2 class="reveal-up" set:html={heading}></h2>
+    <div class="services-head-meta reveal-up">{intro}</div>
+  </div>
+
+  {groups.map((group) => (
+    <div class="service-group">
+      <div class="service-group-label reveal-up">
+        <span class="service-group-num">{group.num}</span>
+        <span class="service-group-name" set:html={group.name}></span>
+        <span class="service-group-meta">{group.meta}</span>
+      </div>
+      {group.items.map((item) => (
+        <a class="service-card" href={url(item.href)} data-hover>
+          <div class="service-card-num">{item.num}</div>
+          <div class="service-card-name">{item.name}</div>
+          <div class="service-card-desc">{item.desc}</div>
+          <div class="service-card-price">
+            {item.price && <strong>{item.price}</strong>}
+          </div>
+          <div class="service-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </div>
+          <img class="service-card-image" src={item.image} alt={item.name} loading="lazy" />
+        </a>
+      ))}
+    </div>
+  ))}
+</section>

@@ -1,0 +1,20 @@
+---
+import Logo from './Logo.astro';
+const year = new Date().getFullYear();
+---
+<footer>
+  <div class="footer-mark">
+    <Logo size={96} loading="lazy" />
+  </div>
+  <div class="footer-tag">Julian Photography · Studio Foto · Negara, Jembrana, Bali</div>
+  <div class="footer-meta">
+    <div>&copy; {year} Julian Photography</div>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/julian_photography/" target="_blank" rel="noopener" data-hover>IG Outdoor</a>
+      <a href="https://www.instagram.com/julianphotostudio" target="_blank" rel="noopener" data-hover>IG Studio</a>
+      <a href="https://www.facebook.com/juliankomang6" target="_blank" rel="noopener" data-hover>Facebook</a>
+      <a href="https://wa.me/6282145945051" target="_blank" rel="noopener" data-hover>WhatsApp</a>
+    </div>
+    <div>Made in Bali</div>
+  </div>
+</footer>

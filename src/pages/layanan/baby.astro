@@ -1,0 +1,187 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedServices from '../../components/RelatedServices.astro';
+import CTA from '../../components/home/CTA.astro';
+import { url } from '../../utils/url';
+import { relatedTo } from '../../data/services';
+
+const title = 'Baby Photography — Milestone & Cake Smash';
+const description =
+  'Sesi baby di studio Julian Photography untuk milestone 3, 6, 9 bulan, dan 1st birthday cake smash. Props lucu, set tematik, suasana ceria di Negara, Jembrana, Bali.';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Baby Photography',
+  description,
+  provider: { '@id': 'https://juliansphotography.com/#business' },
+  serviceType: 'Baby Photography',
+};
+
+const includes = [
+  { icon: 'I', name: 'Sesi Studio 1.5–2 Jam', desc: 'Cukup waktu untuk variasi setup, ganti outfit, dan break feeding/snack.' },
+  { icon: 'II', name: 'Themed Set', desc: 'Set & props menyesuaikan tema (smash cake, mini party, garden, classic, dll).' },
+  { icon: 'III', name: '2–3 Outfit Changes', desc: 'Bayi dengan beberapa look — formal, casual, themed (princess/prince, animal).' },
+  { icon: 'IV', name: 'Cake Smash Optional', desc: 'Untuk 1st birthday — kue smash + setup khusus dengan baju anti-noda yang kami sediakan.' },
+  { icon: 'V', name: 'Edited Hi-Res Photos', desc: '40–80 foto edited dengan tone cerah & ceria, siap cetak hingga A2.' },
+  { icon: 'VI', name: 'Online Gallery', desc: 'Akses gallery online untuk download high-res, mudah di-share ke kakek-nenek.' },
+];
+
+const milestones = [
+  { name: '3 Bulan — Tummy Time', desc: 'Bayi sudah bisa angkat kepala saat tummy. Pose unggulan: tummy time on a blanket dengan eye contact ke kamera. Smile baru muncul di umur ini!', meta: '~3 mo' },
+  { name: '6 Bulan — Sitter Session', desc: 'Bayi sudah bisa duduk sendiri (atau dengan support). Lebih ekspresif, banyak gigi pertama. Cocok untuk shot pose duduk dengan props.', meta: '~6 mo' },
+  { name: '9 Bulan — Cruiser', desc: 'Bayi mulai merangkak / berdiri pegangan. Lebih aktif & susah duduk diam. Kami pakai props yang menarik perhatian + sesi cepat tapi banyak.', meta: '~9 mo' },
+  { name: '12 Bulan — Cake Smash', desc: '1st birthday signature. Bayi smashing kue mini di backdrop dekoratif, ekspresi heboh. Kombinasi formal portrait + cake action.', meta: '~12 mo' },
+];
+
+const themes = [
+  { name: 'Garden / Boho', desc: 'Backdrop bunga kering, rotan, tone cream-sage. Lembut & feminine.', tag: 'Soft' },
+  { name: 'Mini Studio Classic', desc: 'Backdrop neutral grey/cream, props minimal. Timeless & focus pada bayi.', tag: 'Classic' },
+  { name: 'Animal / Cartoon', desc: 'Tema favorit anak: monkey, bunny, jungle, dll. Setup playful dengan props karakter.', tag: 'Fun' },
+  { name: 'Cake Smash Party', desc: 'Backdrop balon, garland, kue mini sesuai warna pilihan. Untuk 1st birthday.', tag: 'Birthday' },
+];
+
+const gallery = [
+  { src: 'https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?w=1200&q=85&auto=format&fit=crop', loc: 'Tummy Time', cls: 'gi-wide' },
+  { src: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=900&q=85&auto=format&fit=crop', loc: 'Sitter', cls: 'gi-tall' },
+  { src: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=1000&q=85&auto=format&fit=crop', loc: 'Classic', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1547089120-4ace65eafd49?w=1000&q=85&auto=format&fit=crop', loc: 'Boho', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1591197175444-aa1923ce0fa8?w=1000&q=85&auto=format&fit=crop', loc: 'Cake Smash', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1492366254240-43affaefc3e3?w=1200&q=85&auto=format&fit=crop', loc: 'Outdoor Look', cls: 'gi-wide' },
+];
+
+const faqs = [
+  { q: 'Kapan waktu terbaik untuk sesi baby?', a: 'Tergantung milestone yang ingin diabadikan. Kami sarankan minimum 4 sesi: 3 bulan, 6 bulan, 9 bulan, dan 1st birthday. Kalau hanya bisa 1 sesi, 6 bulan adalah sweet spot (banyak ekspresi tapi belum overactive).' },
+  { q: 'Bagaimana kalau bayi rewel saat sesi?', a: 'Itu wajar. Kami flexible — kalau bayi capek, kita istirahat 15–20 menit untuk feeding/nap singkat. Sebaiknya jadwalkan sesi 1–2 jam setelah bayi bangun & full feed agar mood-nya bagus.' },
+  { q: 'Cake smash kuenya bagaimana?', a: 'Kami sediakan kue mini smash-friendly (rendah gula, ukuran tepat). Kalau mau bawa kue sendiri dari toko favorit boleh — cukup confirm 3 hari sebelum sesi. Kue lebih bersih untuk komposisi backdrop.' },
+  { q: 'Apakah perlu bawa banyak outfit?', a: 'Standard 2–3 outfit + 1 outfit cadangan (popok bocor selalu mungkin di umur baby). Kami bisa rekomendasi color palette agar matching dengan backdrop tema yang dipilih.' },
+  { q: 'Berapa lama hasil foto siap?', a: 'Sneak peek 5–10 foto dalam 3 hari. Final delivery (full edited gallery) ±2 minggu setelah sesi.' },
+  { q: 'Apakah orang tua bisa ikut foto?', a: 'Boleh banget. Banyak klien suka kombinasi solo bayi + family shot. Kalau ingin family shot, sebutkan saat booking — kami siapkan setup yang accommodate.' },
+];
+
+const related = relatedTo('baby', 3);
+---
+<BaseLayout title={title} description={description} schema={schema}>
+  <section class="subhero">
+    <div class="subhero-img" style="background-image:url('https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?w=2000&q=85&auto=format&fit=crop')"></div>
+    <div class="subhero-grain"></div>
+    <div class="subhero-content">
+      <div class="breadcrumb">
+        <a href={url('/')} data-hover>Beranda</a>
+        <span class="breadcrumb-sep"></span>
+        <a href={url('/layanan/')} data-hover>Layanan</a>
+        <span class="breadcrumb-sep"></span>
+        <span class="breadcrumb-current">Baby</span>
+      </div>
+      <h1>Tumbuh besar,<br /><em>satu milestone pada satu waktu.</em></h1>
+      <div class="subhero-meta">
+        <div class="subhero-meta-text">"Setiap bulan ada hal baru: senyum pertama, gigi pertama, langkah pertama. Mari abadikan satu per satu."</div>
+        <div class="subhero-meta-tags">
+          <span>Studio · Jembrana</span>
+          <span>3 / 6 / 9 / 12 Bulan</span>
+          <span>Themed</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INCLUDES -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Yang Termasuk</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Sesi yang <em>fun & santai.</em></h2>
+    </div>
+    <div class="incl-grid">
+      {includes.map((it) => (
+        <div class="incl-card reveal-up">
+          <div class="incl-card-icon">{it.icon}</div>
+          <div class="incl-card-name">{it.name}</div>
+          <div class="incl-card-desc">{it.desc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- MILESTONES -->
+  <section class="section section-alt">
+    <div class="section-inner-narrow" style="max-width:1100px;margin:0 auto">
+      <div class="section-label reveal-up">— Milestone</div>
+      <h2 class="section-title reveal-up">Setiap umur,<br /><em>cerita berbeda.</em></h2>
+      <p class="section-text reveal-up">
+        Bayi berkembang sangat cepat. Setiap milestone punya karakter visual & teknik foto yang berbeda — di bawah ini panduan singkat untuk plan timing sesi.
+      </p>
+    </div>
+    <ol class="feature-list reveal-up" style="margin-top:60px">
+      {milestones.map((m) => (
+        <li>
+          <div>
+            <div class="feature-list-name">{m.name}</div>
+            <div class="feature-list-desc">{m.desc}</div>
+          </div>
+          <div class="feature-list-meta">{m.meta}</div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- THEMES -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Tema Sesi</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Pilih tema<br /><em>yang paling lucu.</em></h2>
+    </div>
+    <div class="incl-grid">
+      {themes.map((t) => (
+        <div class="incl-card reveal-up">
+          <div class="incl-card-icon">{t.tag.charAt(0)}</div>
+          <div class="incl-card-name">{t.name}</div>
+          <div class="incl-card-desc">{t.desc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section section-alt">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Karya Baby</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Ekspresi <em>yang tak terduga.</em></h2>
+    </div>
+    <div class="gallery-grid" style="margin-top:60px">
+      {gallery.map((g) => (
+        <div class={`gallery-item ${g.cls}`} data-hover>
+          <img src={g.src} alt={`Baby ${g.loc}`} loading="lazy" />
+          <div class="gallery-item-meta">{g.loc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Pertanyaan Umum</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">FAQ <em>seputar baby.</em></h2>
+    </div>
+    <ul class="faq-list" style="margin-top:60px">
+      {faqs.map((item) => (
+        <li class="faq-item reveal-up">
+          <div class="faq-q">
+            <span>{item.q}</span>
+            <span class="faq-q-icon">+</span>
+          </div>
+          <div class="faq-a"><div class="faq-a-inner">{item.a}</div></div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <CTA
+    label="— Booking Baby"
+    heading="Mari abadikan<br /><em>milestone si kecil.</em>"
+    text="Konsultasi gratis via WhatsApp. Sebutkan umur bayi & tema yang dibayangkan — kita siapkan props & set yang pas."
+    showInfo={false}
+  />
+
+  <RelatedServices items={related.map((s) => ({ num: s.num, name: s.name, href: s.href, image: s.image }))} />
+</BaseLayout>

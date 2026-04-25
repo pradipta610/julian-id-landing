@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTA from '../components/home/CTA.astro';
+import { url } from '../utils/url';
+
+const title = 'Tentang Julian';
+const description =
+  'Cerita di balik Julian Photography — studio foto di Negara, Jembrana, Bali yang fokus pada wedding, prewedding, maternity, newborn, baby, dan family photography.';
+
+const tentangSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Tentang Julian Photography',
+    description,
+    inLanguage: 'id-ID',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Julian',
+    jobTitle: 'Fotografer & Pemilik Studio',
+    worksFor: { '@id': 'https://juliansphotography.com/#business' },
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Negara',
+      addressRegion: 'Bali',
+      addressCountry: 'ID',
+    },
+  },
+];
+---
+<BaseLayout title={title} description={description} schema={tentangSchema}>
+  <!-- ====== SUB-HERO ====== -->
+  <section class="subhero">
+    <div class="subhero-img" style="background-image:url('https://images.unsplash.com/photo-1606800052052-a08af7148866?w=2000&q=85&auto=format&fit=crop')"></div>
+    <div class="subhero-grain"></div>
+    <div class="subhero-content">
+      <div class="breadcrumb">
+        <a href={url('/')} data-hover>Beranda</a>
+        <span class="breadcrumb-sep"></span>
+        <span class="breadcrumb-current">Tentang</span>
+      </div>
+      <h1>Mengabadikan momen,<br /><em>satu cerita pada satu waktu.</em></h1>
+      <div class="subhero-meta">
+        <div class="subhero-meta-text">"Dari studio kecil di Jembrana, kami percaya foto terbaik lahir dari kepercayaan — bukan dari kamera mahal."</div>
+        <div class="subhero-meta-tags">
+          <span>Studio · Jembrana</span>
+          <span>Outdoor · Bali</span>
+          <span>Sejak 2017</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== STORY ====== -->
+  <section class="intro">
+    <div class="intro-grid">
+      <div class="intro-img-wrap reveal-img">
+        <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?w=1200&q=85&auto=format&fit=crop" alt="Julian — Fotografer" />
+        <div class="intro-img-badge">Founder &amp; Photographer</div>
+      </div>
+      <div>
+        <div class="intro-label reveal-up">— Cerita Kami</div>
+        <h2 class="reveal-up">Bukan tentang <em>kamera.</em><br />Tentang <em>kepercayaan.</em></h2>
+        <p class="intro-text reveal-up">
+          <!-- TODO: real content from Julian -->
+          Julian Photography lahir dari kecintaan pada cerita-cerita kecil — pelukan pertama, tatapan
+          ibu pada bayi yang baru lahir, tangis bahagia di hari pernikahan. Kami percaya foto bukan
+          sekadar dokumentasi, tetapi <strong>warisan emosi</strong> yang bisa diwariskan ke generasi berikutnya.
+        </p>
+        <p class="intro-text reveal-up">
+          Studio kami berbasis di <strong>Baler Bale Agung, Negara, Jembrana</strong>. Untuk sesi outdoor,
+          kami menjelajah seluruh Bali — dari tebing Uluwatu hingga sawah Tegallalang.
+        </p>
+        <p class="intro-text reveal-up">
+          Pendekatan kami: <em>sederhana, jujur, dan personal.</em> Kami habiskan waktu mengenal kamu
+          dulu sebelum mengangkat kamera — karena foto terbaik selalu datang dari rasa nyaman.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== STATS ====== -->
+  <section class="section section-alt">
+    <div class="section-inner">
+      <div class="intro-stats" style="margin-top:0;border-top:0;padding-top:0">
+        <div class="reveal-up">
+          <div class="stat-num">4.9</div>
+          <div class="stat-label">Google Rating</div>
+        </div>
+        <div class="reveal-up">
+          <div class="stat-num" data-count="414">0</div>
+          <div class="stat-label">Ulasan Klien</div>
+        </div>
+        <div class="reveal-up">
+          <div class="stat-num" data-count="7">0</div>
+          <div class="stat-label">Layanan Foto</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== STUDIO ====== -->
+  <section class="locations">
+    <div class="loc-grid">
+      <div class="loc-text-wrap">
+        <div class="loc-label reveal-up">— Studio Kami</div>
+        <h3 class="loc-title reveal-up">Sudut tenang di <em>Jembrana.</em></h3>
+        <p class="reveal-up" style="color:var(--fg-muted);line-height:1.8;margin-bottom:32px;max-width:520px;font-weight:300">
+          Studio Julian Photography didesain untuk memberi kenyamanan keluarga — terutama untuk sesi
+          maternity, newborn, baby, dan family. Pencahayaan natural, set yang lembut, dan props yang
+          dirawat dengan teliti.
+        </p>
+        <ul class="loc-list">
+          <li class="reveal-up"><span>Alamat</span><span>Baler Bale Agung, Negara</span></li>
+          <li class="reveal-up"><span>Kabupaten</span><span>Jembrana, Bali</span></li>
+          <li class="reveal-up"><span>Kode Pos</span><span>82218</span></li>
+          <li class="reveal-up"><span>Jam Operasional</span><span>09.00–17.00 WITA</span></li>
+        </ul>
+      </div>
+      <div class="loc-img-wrap reveal-img">
+        <!-- TODO: replace with real studio photo -->
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=85&auto=format&fit=crop" alt="Studio Julian Photography" />
+        <div class="loc-img-overlay"></div>
+        <div class="loc-img-tag">Negara · Jembrana</div>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>

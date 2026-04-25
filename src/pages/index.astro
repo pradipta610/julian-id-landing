@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Marquee from '../components/Marquee.astro';
+import Hero from '../components/home/Hero.astro';
+import Intro from '../components/home/Intro.astro';
+import Services from '../components/home/Services.astro';
+import Portfolio from '../components/home/Portfolio.astro';
+import Locations from '../components/home/Locations.astro';
+import Testimonial from '../components/home/Testimonial.astro';
+import CTA from '../components/home/CTA.astro';
+
+const title = 'Studio Foto di Negara, Jembrana, Bali';
+const description =
+  'Studio foto Julian Photography di Negara, Jembrana, Bali. Layanan wedding & prewedding outdoor, plus sesi studio untuk maternity, newborn, baby, dan family. Rating 4.9 di Google.';
+
+const homeSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': 'https://juliansphotography.com/id/#webpage',
+    name: 'Julian Photography — Studio Foto Bali',
+    description,
+    inLanguage: 'id-ID',
+    isPartOf: { '@id': 'https://juliansphotography.com/#website' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name: 'Julian Photography',
+    serviceType: ['Wedding Photography', 'Prewedding Photography', 'Maternity Photography', 'Newborn Photography', 'Baby Photography', 'Family Photography'],
+    areaServed: { '@type': 'AdministrativeArea', name: 'Bali, Indonesia' },
+    provider: { '@id': 'https://juliansphotography.com/#business' },
+  },
+];
+---
+<BaseLayout title={title} description={description} schema={homeSchema}>
+  <Hero />
+  <Marquee />
+  <Intro />
+  <Services />
+  <Portfolio />
+  <Locations />
+  <Testimonial />
+  <CTA />
+</BaseLayout>

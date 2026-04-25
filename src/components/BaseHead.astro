@@ -1,0 +1,138 @@
+---
+/**
+ * BaseHead — meta, fonts, GSAP CDN, JSON-LD schema
+ * Used by BaseLayout
+ */
+import { canonical as makeCanonical } from '../utils/url';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  schema?: object | object[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = '/id/og-default.jpg',
+  schema,
+  noindex = false,
+} = Astro.props;
+
+const SITE_NAME = 'Julian Photography';
+const fullTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME} Bali`;
+const canonicalUrl = canonical ?? makeCanonical(Astro.url.pathname);
+const ogImageAbsolute = ogImage.startsWith('http')
+  ? ogImage
+  : `${Astro.site?.toString().replace(/\/$/, '') ?? ''}${ogImage}`;
+
+// Default LocalBusiness schema injected on every page
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': 'https://juliansphotography.com/#business',
+  name: 'Julian Photography',
+  description:
+    'Studio foto Julian Photography di Negara, Jembrana, Bali. Layanan wedding & prewedding outdoor, plus sesi studio untuk maternity, newborn, baby, dan family.',
+  url: 'https://juliansphotography.com',
+  telephone: '+6282145945051',
+  priceRange: '$$',
+  image: ogImageAbsolute,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Baler Bale Agung',
+    addressLocality: 'Negara',
+    addressRegion: 'Bali',
+    postalCode: '82218',
+    addressCountry: 'ID',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: -8.359,
+    longitude: 114.625,
+  },
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Monday', opens: '11:00', closes: '16:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Tuesday', opens: '07:00', closes: '17:00' },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '09:00',
+      closes: '17:00',
+    },
+  ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    reviewCount: '414',
+  },
+  sameAs: [
+    'https://www.instagram.com/julian_photography/',
+    'https://www.instagram.com/julianphotostudio',
+    'https://www.facebook.com/juliankomang6',
+  ],
+};
+
+const allSchemas: object[] = [localBusinessSchema];
+if (schema) {
+  if (Array.isArray(schema)) allSchemas.push(...schema);
+  else allSchemas.push(schema);
+}
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+{noindex && <meta name="robots" content="noindex,nofollow" />}
+
+<!-- Geo / locale -->
+<meta name="geo.region" content="ID-BA" />
+<meta name="geo.placename" content="Negara, Jembrana, Bali" />
+<meta http-equiv="content-language" content="id" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="id_ID" />
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={ogImageAbsolute} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageAbsolute} />
+
+<!-- Performance: preconnect critical origins -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+<!-- Fonts: Display + Sans -->
+<link
+  href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@300;400;500;600&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Favicon — Julian Photography brand mark -->
+<link rel="icon" type="image/png" href="/id/cropped-cropped-julian-logo.png" />
+<link rel="apple-touch-icon" href="/id/cropped-cropped-julian-logo.png" />
+
+<!-- GSAP via CDN (do NOT bundle) -->
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- JSON-LD schemas -->
+{allSchemas.map((s) => (
+  <script type="application/ld+json" set:html={JSON.stringify(s)} />
+))}

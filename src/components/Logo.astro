@@ -1,0 +1,28 @@
+---
+import { url } from '../utils/url';
+
+interface Props {
+  size?: number;          // pixel height/width (square)
+  variant?: 'mark' | 'wordmark'; // 'mark' = logo only; 'wordmark' = logo + "Julian" text
+  className?: string;
+  loading?: 'eager' | 'lazy';
+}
+
+const {
+  size = 36,
+  variant = 'mark',
+  className = '',
+  loading = 'eager',
+} = Astro.props;
+
+const logoSrc = url('/cropped-cropped-julian-logo.png');
+const cls = ['logo', `logo--${variant}`, className].filter(Boolean).join(' ');
+---
+{variant === 'wordmark' ? (
+  <span class={cls}>
+    <img src={logoSrc} alt="Julian Photography" width={size} height={size} loading={loading} />
+    <span class="logo-text">Julian</span>
+  </span>
+) : (
+  <img class={cls} src={logoSrc} alt="Julian Photography" width={size} height={size} loading={loading} />
+)}

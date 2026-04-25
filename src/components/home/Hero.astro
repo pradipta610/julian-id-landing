@@ -1,0 +1,37 @@
+---
+interface Props {
+  bgImage?: string;
+  tag?: string;
+  lines?: string[]; // each line gets its own animated reveal
+  metaLabel?: string;
+  metaText?: string;
+}
+
+const {
+  bgImage = 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=2000&q=85&auto=format&fit=crop',
+  tag = 'Negara, Jembrana · Bali',
+  lines = ['Cerita', 'cintamu,', '<em>diabadikan.</em>'],
+  metaLabel = '— Studio & Outdoor Photography',
+  metaText = '"Dari studio kami di Jembrana, hingga setiap sudut Bali."',
+} = Astro.props;
+---
+<section class="hero">
+  <div class="hero-img" id="heroImg" style={`background-image:url('${bgImage}')`}></div>
+  <div class="hero-grain"></div>
+  <div class="hero-content">
+    <div class="hero-tag" id="heroTag"><span class="accent-dot"></span>{tag}</div>
+    <h1>
+      {lines.map((line) => (
+        <span class="line"><span set:html={line}></span></span>
+      ))}
+    </h1>
+    <div class="hero-meta" id="heroMeta">
+      <div class="hero-meta-label">{metaLabel}</div>
+      <div class="hero-meta-text">{metaText}</div>
+    </div>
+    <div class="hero-scroll" id="heroScroll">
+      <div>Scroll</div>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,203 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedServices from '../../components/RelatedServices.astro';
+import CTA from '../../components/home/CTA.astro';
+import { url } from '../../utils/url';
+import { relatedTo } from '../../data/services';
+
+const title = 'Wedding Photography Bali';
+const description =
+  'Liputan hari pernikahan di Bali — Uluwatu, Ubud, Canggu, Nusa Dua, Sanur. Style natural & sinematik, fokus pada momen. Konsultasi via WhatsApp 0821-4594-5051.';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Wedding Photography',
+  description,
+  provider: { '@id': 'https://juliansphotography.com/#business' },
+  areaServed: { '@type': 'AdministrativeArea', name: 'Bali, Indonesia' },
+  serviceType: 'Wedding Photography',
+};
+
+const includes = [
+  { icon: 'I', name: 'Pre-Event Coverage', desc: 'Foto persiapan pengantin, detail dress & ring, candid keluarga inti sebelum acara dimulai.' },
+  { icon: 'II', name: 'Akad / Ceremony', desc: 'Liputan penuh momen sakral — dari prosesi hingga ekspresi keluarga & sahabat.' },
+  { icon: 'III', name: 'Family & Group Photos', desc: 'Foto resmi keluarga besar dengan komposisi yang dipersiapkan agar efisien.' },
+  { icon: 'IV', name: 'Reception', desc: 'Liputan sambutan, hiburan, dan first dance dengan pencahayaan profesional.' },
+  { icon: 'V', name: 'Online Gallery', desc: 'Akses gallery online untuk download high-res, sharing ke keluarga & vendor.' },
+  { icon: 'VI', name: 'Edited Hi-Res Photos', desc: '300–800+ foto terpilih, edited dengan tone konsisten, siap cetak hingga A2.' },
+];
+
+const timeline = [
+  { name: 'Pre-Event Briefing', desc: 'Meeting H-2 minggu untuk discuss timeline, lokasi kunci, dan must-have shot list.', meta: 'H-14' },
+  { name: 'Morning Prep', desc: 'Liputan persiapan pengantin, detail attire, ring shots, candid keluarga inti.', meta: '06.00–08.30' },
+  { name: 'Akad / Ceremony', desc: 'Coverage prosesi sakral, momen ijab kabul / pemberkatan, dan reaksi keluarga.', meta: '09.00–11.00' },
+  { name: 'Family Group Photos', desc: 'Foto kelompok dengan list yang disusun sebelumnya untuk efisien & rapi.', meta: '11.00–12.00' },
+  { name: 'Couple Session', desc: 'Sesi singkat pengantin di lokasi venue dengan golden-hour lighting bila memungkinkan.', meta: '15.00–16.00' },
+  { name: 'Reception', desc: 'Liputan sambutan, MC, hiburan, sesi photo booth, hingga closing & final dance.', meta: '18.00–22.00' },
+];
+
+const popularLocations = [
+  { name: 'Uluwatu & Bukit Peninsula', meta: 'Sunset Cliff Wedding' },
+  { name: 'Ubud — Villa & Sawah', meta: 'Hindu Traditional / Boho' },
+  { name: 'Nusa Dua & Sanur', meta: 'Resort Wedding' },
+  { name: 'Canggu & Seminyak', meta: 'Beach Club Wedding' },
+  { name: 'Jembrana & Negara', meta: 'Adat Bali Lokal' },
+];
+
+const gallery = [
+  { src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=85&auto=format&fit=crop', loc: 'Uluwatu', alt: 'Wedding di Uluwatu', cls: 'gi-wide' },
+  { src: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=900&q=85&auto=format&fit=crop', loc: 'Ubud', alt: 'Wedding di Ubud', cls: 'gi-tall' },
+  { src: 'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=1200&q=85&auto=format&fit=crop', loc: 'Canggu', alt: 'Wedding di Canggu', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1000&q=85&auto=format&fit=crop', loc: 'Nusa Dua', alt: 'Wedding di Nusa Dua', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=1200&q=85&auto=format&fit=crop', loc: 'Seminyak', alt: 'Wedding di Seminyak', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200&q=85&auto=format&fit=crop', loc: 'Tegallalang', alt: 'Wedding di Tegallalang', cls: 'gi-wide' },
+  { src: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=1200&q=85&auto=format&fit=crop', loc: 'Sanur', alt: 'Wedding di Sanur', cls: 'gi-tall' },
+  { src: 'https://images.unsplash.com/photo-1537907510278-10acdb198d0f?w=1000&q=85&auto=format&fit=crop', loc: 'Nusa Penida', alt: 'Wedding di Nusa Penida', cls: '' },
+];
+
+const faqs = [
+  { q: 'Berapa lama coverage idealnya untuk wedding?', a: 'Untuk full-day Bali wedding biasanya 10–12 jam (morning prep s/d reception). Untuk akad-only atau intimate ceremony, 4–6 jam sudah cukup. Detail kami sesuaikan saat konsultasi.' },
+  { q: 'Berapa fotografer yang akan hadir?', a: 'Standard 2 fotografer (lead + 2nd shooter) untuk full-day. Untuk wedding besar atau venue terpisah (bride & groom prep parallel), bisa ditambah team sesuai kebutuhan.' },
+  { q: 'Kapan hasil foto siap?', a: 'Sneak peek (10–20 foto) dalam 3–5 hari setelah hari-H. Final delivery (full edited gallery) 4–8 minggu, tergantung paket. Album fisik tambahan ±2–3 minggu.' },
+  { q: 'Apakah hasilnya berwarna atau B&W?', a: 'Default mix berwarna dengan tone signature kami yang natural-sinematik. B&W disertakan untuk shot dengan emosi kuat. Kalau ada preferensi spesifik bisa di-discuss saat briefing.' },
+  { q: 'Apakah file RAW disertakan?', a: 'Tidak — kami hanya deliver final edited JPEG/TIFF high-res. RAW adalah working file fotografer, sama seperti chef tidak menyerahkan adonan mentah. Hi-res JPEG kami siap cetak hingga A2.' },
+  { q: 'Apakah kalian travel ke luar Bali?', a: 'Iya, kami available untuk destination wedding di Lombok, Sumba, Flores, atau pulau lain. Travel cost & accommodation dibahas terpisah saat konsultasi.' },
+];
+
+const related = relatedTo('wedding', 3);
+---
+<BaseLayout title={title} description={description} schema={schema}>
+  <!-- ====== SUB-HERO ====== -->
+  <section class="subhero">
+    <div class="subhero-img" style="background-image:url('https://images.unsplash.com/photo-1519741497674-611481863552?w=2000&q=85&auto=format&fit=crop')"></div>
+    <div class="subhero-grain"></div>
+    <div class="subhero-content">
+      <div class="breadcrumb">
+        <a href={url('/')} data-hover>Beranda</a>
+        <span class="breadcrumb-sep"></span>
+        <a href={url('/layanan/')} data-hover>Layanan</a>
+        <span class="breadcrumb-sep"></span>
+        <span class="breadcrumb-current">Wedding</span>
+      </div>
+      <h1>Hari pernikahanmu,<br /><em>diabadikan dengan tenang.</em></h1>
+      <div class="subhero-meta">
+        <div class="subhero-meta-text">"Kami fokus pada momen — bukan pada gaya. Karena pernikahanmu sudah punya cerita sendiri."</div>
+        <div class="subhero-meta-tags">
+          <span>Outdoor · Bali</span>
+          <span>10–12 Jam</span>
+          <span>Sinematik</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== INCLUDES ====== -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Yang Termasuk</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Semua yang kamu butuhkan,<br /><em>dalam satu paket.</em></h2>
+      <p class="section-text reveal-up" style="margin-left:auto;margin-right:auto;text-align:left">
+        Setiap paket wedding kami sudah mencakup tim, peralatan, dan post-production. Tidak ada hidden cost — yang kamu lihat di detail penawaran adalah yang kamu dapat.
+      </p>
+    </div>
+    <div class="incl-grid">
+      {includes.map((it) => (
+        <div class="incl-card reveal-up">
+          <div class="incl-card-icon">{it.icon}</div>
+          <div class="incl-card-name">{it.name}</div>
+          <div class="incl-card-desc">{it.desc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ====== TIMELINE ====== -->
+  <section class="section section-alt">
+    <div class="section-inner-narrow" style="max-width:1100px;margin:0 auto">
+      <div class="section-label reveal-up">— Flow Hari-H</div>
+      <h2 class="section-title reveal-up">Timeline khas <em>wedding day</em></h2>
+      <p class="section-text reveal-up">
+        Setiap pernikahan punya ritme sendiri — di bawah ini contoh timeline standar yang biasa kami coverage. Saat briefing, kita susun bareng yang sesuai venue & adat-mu.
+      </p>
+    </div>
+    <ol class="feature-list reveal-up" style="margin-top:60px">
+      {timeline.map((t) => (
+        <li>
+          <div>
+            <div class="feature-list-name">{t.name}</div>
+            <div class="feature-list-desc">{t.desc}</div>
+          </div>
+          <div class="feature-list-meta">{t.meta}</div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- ====== GALLERY ====== -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Karya Wedding</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Setiap pasangan,<br /><em>setiap cerita.</em></h2>
+    </div>
+    <div class="gallery-grid" style="margin-top:60px">
+      {gallery.map((g) => (
+        <div class={`gallery-item ${g.cls}`} data-hover>
+          <img src={g.src} alt={g.alt} loading="lazy" />
+          <div class="gallery-item-meta">{g.loc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ====== POPULAR LOCATIONS ====== -->
+  <section class="section section-alt">
+    <div class="loc-grid">
+      <div class="loc-text-wrap">
+        <div class="loc-label reveal-up">— Lokasi Populer</div>
+        <h3 class="loc-title reveal-up">Bali punya <em>banyak panggung</em></h3>
+        <p class="reveal-up" style="color:var(--fg-muted);line-height:1.8;margin-bottom:32px;max-width:520px;font-weight:300">
+          Dari tebing Uluwatu yang dramatis hingga sawah Ubud yang teduh — kami familiar dengan venue & timing terbaik di setiap area Bali.
+        </p>
+        <ul class="loc-list">
+          {popularLocations.map((loc) => (
+            <li class="reveal-up"><span>{loc.name}</span><span>{loc.meta}</span></li>
+          ))}
+        </ul>
+      </div>
+      <div class="loc-img-wrap reveal-img">
+        <img src="https://images.unsplash.com/photo-1518544801976-3e159e50e5bb?w=1200&q=85&auto=format&fit=crop" alt="Lokasi wedding di Bali" />
+        <div class="loc-img-overlay"></div>
+        <div class="loc-img-tag">Outdoor · Bali</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FAQ ====== -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Pertanyaan Umum</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">FAQ <em>seputar wedding.</em></h2>
+    </div>
+    <ul class="faq-list" style="margin-top:60px">
+      {faqs.map((item) => (
+        <li class="faq-item reveal-up">
+          <div class="faq-q">
+            <span>{item.q}</span>
+            <span class="faq-q-icon">+</span>
+          </div>
+          <div class="faq-a"><div class="faq-a-inner">{item.a}</div></div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <CTA
+    label="— Booking Wedding"
+    heading="Siap mengabadikan<br />hari <em>pernikahanmu?</em>"
+    text="Konsultasi gratis lewat WhatsApp. Ceritakan tanggal, venue, dan visi kamu — kita susun paket yang tepat."
+    showInfo={false}
+  />
+
+  <RelatedServices items={related.map((s) => ({ num: s.num, name: s.name, href: s.href, image: s.image }))} />
+</BaseLayout>

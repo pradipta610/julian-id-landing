@@ -1,0 +1,30 @@
+---
+interface Props {
+  label?: string;
+  quote?: string;
+  authorName?: string;
+  authorEvent?: string;
+  authorImg?: string;
+}
+
+const {
+  label = '— Testimoni',
+  quote = "Such an amazing experience at Julian's photography. Friendly staff, great service — hasilnya bener-bener di luar ekspektasi. Setiap momen ditangkap dengan natural dan personal.",
+  authorName = 'Samantha Samiada',
+  authorEvent = 'Google Review · ★ 4.9/5 (414 ulasan)',
+  authorImg = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=85&auto=format&fit=crop',
+} = Astro.props;
+---
+<section class="testimonial">
+  <div class="testimonial-content">
+    <div class="testimonial-label reveal-up">{label}</div>
+    <blockquote class="reveal-up">"{quote}"</blockquote>
+    <div class="testimonial-author reveal-up">
+      <div class="testimonial-author-img"><img src={authorImg} alt="" /></div>
+      <div class="testimonial-author-text">
+        <div class="testimonial-author-name">{authorName}</div>
+        <div class="testimonial-author-event">{authorEvent}</div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,66 @@
+---
+interface Props {
+  bgImage?: string;
+  label?: string;
+  heading?: string; // HTML
+  text?: string;
+  primaryHref?: string;
+  primaryLabel?: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
+  showInfo?: boolean;
+}
+
+const {
+  bgImage = 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=2000&q=85&auto=format&fit=crop',
+  label = '— Siap Memulai?',
+  heading = 'Mari ciptakan kenangan<br>yang <em>tak terlupakan.</em>',
+  text = 'Konsultasi gratis lewat WhatsApp. Ceritakan jenis sesi (wedding, prewedding, maternity, newborn, baby, family) — kita bahas detailnya bareng.',
+  primaryHref = 'https://wa.me/6282145945051?text=Halo%20Julian%2C%20saya%20mau%20konsultasi%20sesi%20foto',
+  primaryLabel = 'WhatsApp · 0821-4594-5051',
+  secondaryHref = 'https://www.instagram.com/julian_photography/',
+  secondaryLabel = 'DM Instagram',
+  showInfo = true,
+} = Astro.props;
+---
+<section class="cta" id="kontak">
+  <div class="cta-bg" id="ctaBg" style={`background-image:url('${bgImage}')`}></div>
+  <div class="cta-content">
+    <div class="cta-glass">
+      <div class="cta-label reveal-up">{label}</div>
+      <h2 class="reveal-up" set:html={heading}></h2>
+      <p class="cta-text reveal-up">{text}</p>
+      <div class="cta-btns reveal-up">
+        <a href={primaryHref} class="btn btn-primary" target="_blank" rel="noopener" data-hover>
+          <span>{primaryLabel}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href={secondaryHref} class="btn btn-outline" target="_blank" rel="noopener" data-hover>
+          <span>{secondaryLabel}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+
+      {showInfo && (
+        <div class="cta-info reveal-up">
+          <div>
+            <div class="cta-info-label">Alamat Studio</div>
+            <div class="cta-info-value">Baler Bale Agung<br />Negara, Jembrana<br />Bali 82218</div>
+          </div>
+          <div>
+            <div class="cta-info-label">Jam Operasional</div>
+            <div class="cta-info-value">Sen · 11.00–16.00<br />Sel · 07.00–17.00<br />Rab–Min · 09.00–17.00</div>
+          </div>
+          <div>
+            <div class="cta-info-label">Sosial Media</div>
+            <div class="cta-info-value">
+              <a href="https://www.instagram.com/julian_photography/" target="_blank" rel="noopener">IG Outdoor ↗</a><br />
+              <a href="https://www.instagram.com/julianphotostudio" target="_blank" rel="noopener">IG Studio ↗</a><br />
+              <a href="https://www.facebook.com/juliankomang6" target="_blank" rel="noopener">Facebook ↗</a>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</section>

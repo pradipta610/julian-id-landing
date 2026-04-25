@@ -1,0 +1,18 @@
+/* =====================================================
+   Design tokens — overridable CSS variables
+   ===================================================== */
+:root{
+  --bg:#0a0a0a;
+  --bg-alt:#111111;
+  --fg:#fafafa;
+  --fg-muted:#888888;
+  --fg-dim:#555555;
+  --accent:#c9a96e;
+  --accent-soft:rgba(201,169,110,.15);
+  --line:rgba(255,255,255,.08);
+  --glass:rgba(255,255,255,.05);
+  --glass-strong:rgba(255,255,255,.08);
+  --serif:'Fraunces',serif;
+  --sans:'Inter',sans-serif;
+  --ease:cubic-bezier(.7,0,.2,1);
+}

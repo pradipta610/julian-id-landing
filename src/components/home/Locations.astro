@@ -1,0 +1,50 @@
+---
+interface Location {
+  name: string;
+  meta: string;
+}
+
+interface Props {
+  label?: string;
+  heading?: string; // HTML
+  description?: string; // HTML
+  image?: string;
+  imageTag?: string;
+  locations?: Location[];
+}
+
+const {
+  label = '— Studio & Outdoor',
+  heading = 'Dari <em>Jembrana,</em><br>hingga penjuru Bali.',
+  description = 'Studio kami berada di <strong style="color:var(--fg);font-weight:400">Baler Bale Agung, Negara, Jembrana</strong>. Untuk sesi outdoor wedding & prewedding, kami siap mendatangi lokasi impian Anda di seluruh Bali.',
+  image = 'https://images.unsplash.com/photo-1518544801976-3e159e50e5bb?w=1200&q=85&auto=format&fit=crop',
+  imageTag = 'Studio · Jembrana',
+  locations = [
+    { name: 'Jembrana & Negara', meta: 'Studio Base' },
+    { name: 'Uluwatu & Bukit Peninsula', meta: 'Sunset Cliff' },
+    { name: 'Ubud & Tegallalang', meta: 'Sawah Hijau' },
+    { name: 'Seminyak & Canggu', meta: 'Beach Club' },
+    { name: 'Nusa Dua & Sanur', meta: 'Pantai Tenang' },
+    { name: 'Nusa Penida & Lembongan', meta: 'Pulau Tropis' },
+  ],
+} = Astro.props;
+---
+<section class="locations">
+  <div class="loc-grid">
+    <div class="loc-text-wrap">
+      <div class="loc-label reveal-up">{label}</div>
+      <h3 class="loc-title reveal-up" set:html={heading}></h3>
+      <p class="reveal-up" style="color:var(--fg-muted);line-height:1.8;margin-bottom:32px;max-width:520px;font-weight:300" set:html={description}></p>
+      <ul class="loc-list">
+        {locations.map((loc) => (
+          <li class="reveal-up"><span>{loc.name}</span><span>{loc.meta}</span></li>
+        ))}
+      </ul>
+    </div>
+    <div class="loc-img-wrap reveal-img">
+      <img src={image} alt="Lokasi Bali" />
+      <div class="loc-img-overlay"></div>
+      <div class="loc-img-tag">{imageTag}</div>
+    </div>
+  </div>
+</section>

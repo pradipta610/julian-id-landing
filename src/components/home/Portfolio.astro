@@ -1,0 +1,145 @@
+---
+interface Slide {
+  num: string;
+  name: string; // HTML allowed
+  location: string;
+  year: string;
+  exif: string;
+  image: string;
+  alt: string;
+}
+
+interface Props {
+  label?: string;
+  heading?: string; // HTML
+  slides?: Slide[];
+}
+
+const {
+  label = '— Karya',
+  heading = 'Cerita <em>terpilih</em>',
+  slides = [
+    {
+      num: '01',
+      name: 'Sasha <em>&amp;</em> Kanha',
+      location: 'Uluwatu',
+      year: 'MMXXV',
+      exif: 'ƒ/1.4 · 50mm · ISO 400',
+      image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=85&auto=format&fit=crop',
+      alt: 'Sasha & Kanha',
+    },
+    {
+      num: '02',
+      name: 'Maya <em>&amp;</em> Arjuna',
+      location: 'Ubud',
+      year: 'MMXXIV',
+      exif: 'ƒ/2.0 · 35mm · ISO 800',
+      image: 'https://images.unsplash.com/photo-1523438097201-512ae7d7c424?w=1000&q=85&auto=format&fit=crop',
+      alt: 'Maya & Arjuna',
+    },
+    {
+      num: '03',
+      name: 'Dewi <em>&amp;</em> Arya',
+      location: 'Canggu',
+      year: 'MMXXIV',
+      exif: 'ƒ/1.8 · 85mm · ISO 200',
+      image: 'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=1200&q=85&auto=format&fit=crop',
+      alt: 'Dewi & Arya',
+    },
+    {
+      num: '04',
+      name: 'Putri <em>&amp;</em> Bayu',
+      location: 'Nusa Dua',
+      year: 'MMXXIV',
+      exif: 'ƒ/2.8 · 24mm · ISO 400',
+      image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1000&q=85&auto=format&fit=crop',
+      alt: 'Putri & Bayu',
+    },
+    {
+      num: '05',
+      name: 'Anya <em>&amp;</em> Reza',
+      location: 'Seminyak',
+      year: 'MMXXIII',
+      exif: 'ƒ/1.4 · 50mm · ISO 1600',
+      image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=1200&q=85&auto=format&fit=crop',
+      alt: 'Anya & Reza',
+    },
+    {
+      num: '06',
+      name: 'Citra <em>&amp;</em> Eka',
+      location: 'Tegallalang',
+      year: 'MMXXIII',
+      exif: 'ƒ/2.2 · 35mm · ISO 400',
+      image: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1000&q=85&auto=format&fit=crop',
+      alt: 'Citra & Eka',
+    },
+    {
+      num: '07',
+      name: 'Rini <em>&amp;</em> Hadi',
+      location: 'Sanur',
+      year: 'MMXXIII',
+      exif: 'ƒ/2.0 · 50mm · ISO 800',
+      image: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=1200&q=85&auto=format&fit=crop',
+      alt: 'Rini & Hadi',
+    },
+    {
+      num: '08',
+      name: 'Sari <em>&amp;</em> Ardi',
+      location: 'Nusa Penida',
+      year: 'MMXXIII',
+      exif: 'ƒ/1.8 · 85mm · ISO 400',
+      image: 'https://images.unsplash.com/photo-1537907510278-10acdb198d0f?w=1000&q=85&auto=format&fit=crop',
+      alt: 'Sari & Ardi',
+    },
+  ],
+} = Astro.props;
+---
+<section class="portfolio" id="karya">
+  <div class="pf-sticky">
+    <div class="pf-top">
+      <div class="portfolio-label">{label}</div>
+      <div class="pf-counter">
+        <span class="pf-counter-current" id="pfCurrent">01</span>
+        <span class="pf-counter-sep"></span>
+        <span class="pf-counter-total">{String(slides.length).padStart(2, '0')}</span>
+      </div>
+    </div>
+
+    <div class="pf-heading" aria-hidden="true" set:html={heading}></div>
+
+    <div class="pf-rail">
+      <div class="pf-track" id="pfTrack">
+        {slides.map((s, i) => (
+          <div class={`pf-slide pf-s-${i + 1}`} data-hover>
+            <div class="pf-frame">
+              <div class="pf-frame-num">{s.num}</div>
+              <img src={s.image} alt={s.alt} loading="lazy" />
+              <div class="pf-exif">
+                <span>{s.exif}</span>
+                <span class="pf-exif-dot"></span>
+                <span>{s.location.toUpperCase()}</span>
+              </div>
+            </div>
+            <div class="pf-meta">
+              <div class="pf-meta-name" set:html={s.name}></div>
+              <div class="pf-meta-sub">
+                <span>{s.location}</span>
+                <span>{s.year}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="pf-bottom">
+      <div class="pf-scroll-cue">
+        <span>Scroll</span>
+        <div class="pf-scroll-cue-line"></div>
+        <span>atau Drag</span>
+      </div>
+      <div class="pf-progress"><div class="pf-progress-fill" id="pfProgress"></div></div>
+      <div class="pf-date">VOL · {String(slides.length).padStart(2, '0')} / SELECTED WORKS</div>
+    </div>
+  </div>
+</section>

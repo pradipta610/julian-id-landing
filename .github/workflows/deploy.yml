@@ -1,4 +1,4 @@
-name: Deploy to Hostinger
+name: Build & Deploy Astro to Hostinger
 
 on:
   push:
@@ -7,19 +7,51 @@ on:
 
 jobs:
   deploy:
-    name: SSH and pull
+    name: Build Astro and deploy via rsync
     runs-on: ubuntu-latest
     steps:
-      - name: Pull latest code on Hostinger
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            set -e
-            cd /home/u1427052/public_html/id/
-            git fetch origin master
-            git reset --hard origin/master
-            echo "✅ Deploy completed at $(date)"
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Astro
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          ls -la dist/
+          test -f dist/index.html || (echo "index.html missing" && exit 1)
+          echo "Build verified"
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Deploy to Hostinger via rsync
+        run: |
+          rsync -avz --delete \
+            --exclude='.git' \
+            --exclude='.cpanel.yml' \
+            -e "ssh -i ~/.ssh/id_rsa -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no -o MACs=hmac-sha2-256-etm@openssh.com" \
+            dist/ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/u1427052/public_html/id/
+
+      - name: Verify deployment
+        run: |
+          ssh -i ~/.ssh/id_rsa \
+            -p ${{ secrets.SSH_PORT }} \
+            -o StrictHostKeyChecking=no \
+            -o MACs=hmac-sha2-256-etm@openssh.com \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "ls -la /home/u1427052/public_html/id/ && echo 'Deploy verified'"

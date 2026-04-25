@@ -1,0 +1,192 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedServices from '../../components/RelatedServices.astro';
+import CTA from '../../components/home/CTA.astro';
+import { url } from '../../utils/url';
+import { relatedTo } from '../../data/services';
+
+const title = 'Maternity Photography di Studio Jembrana';
+const description =
+  'Sesi maternity di studio Julian Photography, Negara Jembrana, Bali. Pencahayaan studio yang lembut, wardrobe disediakan. Timing ideal usia kehamilan 30–34 minggu.';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Maternity Photography',
+  description,
+  provider: { '@id': 'https://juliansphotography.com/#business' },
+  serviceType: 'Maternity Photography',
+};
+
+const includes = [
+  { icon: 'I', name: 'Sesi Studio 1.5 Jam', desc: 'Pencahayaan studio yang lembut, AC nyaman, dan privacy terjaga untuk ibu hamil.' },
+  { icon: 'II', name: 'Wardrobe Disediakan', desc: 'Koleksi maternity gowns (flowy chiffon, silk) dengan berbagai warna & potongan.' },
+  { icon: 'III', name: '1–2 Outfit Changes', desc: 'Variasi look — dari closed-belly elegan hingga bare-belly intimate.' },
+  { icon: 'IV', name: 'Edited Hi-Res Photos', desc: '30–60 foto edited dengan tone soft & warm, siap cetak hingga A2.' },
+  { icon: 'V', name: 'Online Gallery', desc: 'Akses gallery online untuk download high-res, mudah di-share ke keluarga.' },
+  { icon: 'VI', name: 'Partner Welcome', desc: 'Calon ayah & anak yang lebih besar boleh ikut serta — sesi keluarga kecil yang hangat.' },
+];
+
+const timing = [
+  { name: 'Trimester Awal (Minggu 1–12)', desc: 'Belum direkomendasikan — perut belum terlihat dan ibu sering mengalami morning sickness.', meta: 'Belum Ideal' },
+  { name: 'Trimester Kedua (Minggu 13–26)', desc: 'Bisa untuk announcement shoot, tapi belum optimal untuk highlight kehamilan.', meta: 'Opsional' },
+  { name: 'Minggu 28–30', desc: 'Mulai bisa, perut sudah cukup terlihat. Cocok untuk ibu yang takut terlalu lelah di trimester akhir.', meta: 'Bisa' },
+  { name: 'Minggu 30–34 — IDEAL', desc: 'Sweet spot. Perut sudah membulat sempurna, mama masih nyaman bergerak. 90% klien kami sesi di window ini.', meta: 'Sangat Ideal' },
+  { name: 'Minggu 35–37', desc: 'Masih oke kalau mama masih fit. Beberapa pose mungkin terbatas karena ukuran perut.', meta: 'Last Call' },
+  { name: 'Minggu 38+', desc: 'Tidak direkomendasikan — terlalu dekat HPL & risiko kontraksi. Better skip dan langsung newborn session.', meta: 'Tidak Ideal' },
+];
+
+const concepts = [
+  { name: 'Soft & Dreamy', desc: 'Wardrobe chiffon flowy putih/cream, pencahayaan lembut backlit, mood feminine & ethereal.', tag: 'Light Tone' },
+  { name: 'Earthy & Natural', desc: 'Wardrobe terracotta, sage, atau caramel. Set minimalis dengan props daun atau bunga kering.', tag: 'Earth Tone' },
+  { name: 'Bold & Modern', desc: 'Wardrobe dramatic black/jewel tones, lighting kontras, mood confident & artistic.', tag: 'Dark Tone' },
+  { name: 'Couple / Family', desc: 'Bareng calon ayah atau anak yang lebih besar — fokus pada ekspresi & kebersamaan.', tag: 'Together' },
+];
+
+const gallery = [
+  { src: 'https://images.unsplash.com/photo-1531983412531-1f49a365ffed?w=1200&q=85&auto=format&fit=crop', loc: 'Studio Soft', cls: 'gi-wide' },
+  { src: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=900&q=85&auto=format&fit=crop', loc: 'Earth Tone', cls: 'gi-tall' },
+  { src: 'https://images.unsplash.com/photo-1537673023-df36ed4cb13d?w=1000&q=85&auto=format&fit=crop', loc: 'Couple', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1518152006812-edab29b069ac?w=1000&q=85&auto=format&fit=crop', loc: 'Backlit', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?w=1200&q=85&auto=format&fit=crop', loc: 'Family', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1492366254240-43affaefc3e3?w=1200&q=85&auto=format&fit=crop', loc: 'Modern', cls: 'gi-wide' },
+];
+
+const faqs = [
+  { q: 'Kapan sebaiknya saya booking maternity?', a: 'Begitu kandungan masuk minggu 20 (sekitar trimester 2). Slot maternity terbatas karena harus disesuaikan dengan timing ideal masing-masing ibu. Booking awal mengamankan slot di minggu 30–34.' },
+  { q: 'Apakah aman untuk ibu hamil sesi 1.5 jam?', a: 'Iya — kami berhati-hati. Ada break minum & rest setiap 20 menit. Posisi pose disesuaikan supaya mama nyaman dan tidak overheat. Kalau capek kapan saja kita pause.' },
+  { q: 'Bisa bawa wardrobe sendiri?', a: 'Boleh banget. Banyak mama bawa dress favorit atau bahkan dress hadiah dari pasangan. Kombinasi wardrobe kami + wardrobe sendiri biasanya hasil terbaik.' },
+  { q: 'Apakah bare-belly diperlukan?', a: 'Tidak wajib sama sekali. Kami punya wardrobe yang menutup penuh tapi tetap menonjolkan bentuk perut. Bare-belly adalah pilihan ibu — sesuaikan kenyamanan masing-masing.' },
+  { q: 'Berapa lama hasil foto siap?', a: 'Sneak peek 3–5 foto dalam 3 hari. Final delivery (full edited gallery) ±2 minggu setelah sesi.' },
+  { q: 'Apakah hair & make-up disertakan?', a: 'Tidak by default — tapi kami punya rekomendasi MUA yang biasa kerjasama. Untuk maternity kami sarankan no-makeup look atau natural look agar fokus pada glow alami ibu hamil.' },
+];
+
+const related = relatedTo('maternity', 3);
+---
+<BaseLayout title={title} description={description} schema={schema}>
+  <section class="subhero">
+    <div class="subhero-img" style="background-image:url('https://images.unsplash.com/photo-1531983412531-1f49a365ffed?w=2000&q=85&auto=format&fit=crop')"></div>
+    <div class="subhero-grain"></div>
+    <div class="subhero-content">
+      <div class="breadcrumb">
+        <a href={url('/')} data-hover>Beranda</a>
+        <span class="breadcrumb-sep"></span>
+        <a href={url('/layanan/')} data-hover>Layanan</a>
+        <span class="breadcrumb-sep"></span>
+        <span class="breadcrumb-current">Maternity</span>
+      </div>
+      <h1>Mengabadikan keajaiban,<br /><em>sebelum kelahiran.</em></h1>
+      <div class="subhero-meta">
+        <div class="subhero-meta-text">"Sembilan bulan adalah perjalanan panjang. Pantas diberi satu sesi pelan untuk merayakannya."</div>
+        <div class="subhero-meta-tags">
+          <span>Studio · Jembrana</span>
+          <span>Minggu 30–34</span>
+          <span>1.5 Jam</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INCLUDES -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Yang Termasuk</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Sesi yang <em>nyaman</em><br />untuk mama & dede.</h2>
+    </div>
+    <div class="incl-grid">
+      {includes.map((it) => (
+        <div class="incl-card reveal-up">
+          <div class="incl-card-icon">{it.icon}</div>
+          <div class="incl-card-name">{it.name}</div>
+          <div class="incl-card-desc">{it.desc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- TIMING -->
+  <section class="section section-alt">
+    <div class="section-inner-narrow" style="max-width:1100px;margin:0 auto">
+      <div class="section-label reveal-up">— Timing Ideal</div>
+      <h2 class="section-title reveal-up">Kapan <em>waktu terbaik</em>?</h2>
+      <p class="section-text reveal-up">
+        Sweet spot maternity adalah <strong>minggu 30–34</strong> — perut sudah membulat sempurna, mama masih nyaman bergerak. Berikut breakdown per fase kehamilan untuk membantu kamu plan timing.
+      </p>
+    </div>
+    <ol class="feature-list reveal-up" style="margin-top:60px">
+      {timing.map((t) => (
+        <li>
+          <div>
+            <div class="feature-list-name">{t.name}</div>
+            <div class="feature-list-desc">{t.desc}</div>
+          </div>
+          <div class="feature-list-meta">{t.meta}</div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- CONCEPTS -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Pilihan Konsep</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Pilih mood<br /><em>yang paling kamu suka.</em></h2>
+      <p class="section-text reveal-up" style="margin-left:auto;margin-right:auto;text-align:left">
+        Saat konsultasi awal, kita pilih konsep yang sesuai dengan kepribadian & wardrobe kamu. Bisa juga combine 2 konsep dalam 1 sesi.
+      </p>
+    </div>
+    <div class="incl-grid">
+      {concepts.map((c) => (
+        <div class="incl-card reveal-up">
+          <div class="incl-card-icon">{c.tag.charAt(0)}</div>
+          <div class="incl-card-name">{c.name}</div>
+          <div class="incl-card-desc">{c.desc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section section-alt">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Karya Maternity</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Setiap mama,<br /><em>cahaya yang berbeda.</em></h2>
+    </div>
+    <div class="gallery-grid" style="margin-top:60px">
+      {gallery.map((g) => (
+        <div class={`gallery-item ${g.cls}`} data-hover>
+          <img src={g.src} alt={`Maternity ${g.loc}`} loading="lazy" />
+          <div class="gallery-item-meta">{g.loc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Pertanyaan Umum</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">FAQ <em>seputar maternity.</em></h2>
+    </div>
+    <ul class="faq-list" style="margin-top:60px">
+      {faqs.map((item) => (
+        <li class="faq-item reveal-up">
+          <div class="faq-q">
+            <span>{item.q}</span>
+            <span class="faq-q-icon">+</span>
+          </div>
+          <div class="faq-a"><div class="faq-a-inner">{item.a}</div></div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <CTA
+    label="— Booking Maternity"
+    heading="Mari rayakan<br /><em>kehamilanmu.</em>"
+    text="Konsultasi gratis via WhatsApp. Sebutkan HPL & preferensi konsep — kita atur slot yang pas dengan timing ideal mama."
+    showInfo={false}
+  />
+
+  <RelatedServices items={related.map((s) => ({ num: s.num, name: s.name, href: s.href, image: s.image }))} />
+</BaseLayout>

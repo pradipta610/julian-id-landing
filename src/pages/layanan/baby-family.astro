@@ -1,0 +1,187 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedServices from '../../components/RelatedServices.astro';
+import CTA from '../../components/home/CTA.astro';
+import { url } from '../../utils/url';
+import { relatedTo } from '../../data/services';
+
+const title = 'Baby & Family Photography — Sesi Kombo';
+const description =
+  'Sesi kombinasi bayi + orang tua di studio Julian Photography Negara Jembrana. Lifestyle hangat, momen kebersamaan keluarga muda, hasil natural & emosional.';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Baby & Family Photography',
+  description,
+  provider: { '@id': 'https://juliansphotography.com/#business' },
+  serviceType: 'Family Photography',
+};
+
+const includes = [
+  { icon: 'I', name: 'Sesi Studio 1.5 Jam', desc: 'Cukup waktu untuk solo bayi + family shot + candid kebersamaan.' },
+  { icon: 'II', name: 'Mix: Solo + Family', desc: 'Foto bayi sendiri di props, foto bayi dengan papa/mama, foto bertiga lengkap.' },
+  { icon: 'III', name: 'Lifestyle Approach', desc: 'Lebih banyak interaksi natural — peluk, ciuman, tertawa bareng — bukan pose kaku.' },
+  { icon: 'IV', name: 'Sibling Welcome', desc: 'Kakak yang lebih besar boleh ikut. Sesi adjusted dengan time sibling-friendly.' },
+  { icon: 'V', name: 'Edited Hi-Res Photos', desc: '50–80 foto edited dengan tone hangat & emotional, siap cetak hingga A2.' },
+  { icon: 'VI', name: 'Online Gallery', desc: 'Akses gallery online untuk download high-res, mudah di-share ke kakek-nenek.' },
+];
+
+const concepts = [
+  { name: 'New Family Lifestyle', desc: 'Untuk keluarga baru dengan newborn / bayi <6 bulan. Mood tenang, banyak close-up emosi.', tag: 'Lifestyle' },
+  { name: 'Toddler & Parents', desc: 'Untuk bayi 6 bulan–2 tahun yang sudah aktif. Lebih banyak gerakan, kakak ikut bermain.', tag: 'Active' },
+  { name: 'Studio Classic Family', desc: 'Pose formal dengan tone neutral. Cocok untuk frame di rumah / hadiah ke orang tua.', tag: 'Classic' },
+  { name: 'Themed Family', desc: 'Tema (boho, garden, monochrome, dll) dengan wardrobe matching seluruh keluarga.', tag: 'Theme' },
+];
+
+const wardrobeTips = [
+  { name: 'Koordinasi 2–3 Warna', desc: 'Pilih palette terbatas (cream + sage + terracotta, atau cream + navy). Hindari setiap orang pakai warna berbeda yang bertabrakan.', meta: 'Palette' },
+  { name: 'Tekstur Berlapis', desc: 'Variasi tekstur (rajut + linen + denim) lebih fotogenik daripada semuanya kain sama. Tambahkan vest / cardigan untuk depth.', meta: 'Texture' },
+  { name: 'Simple > Berlebihan', desc: 'Hindari logo besar, pattern ramai, atau aksesori berlebihan pada bayi. Simple memungkinkan fokus pada wajah & ekspresi.', meta: 'Simple' },
+  { name: 'Bawa Outfit Cadangan', desc: 'Untuk sesi dengan bayi/toddler — selalu bawa 1 set cadangan untuk semua orang. Spit-up & tumpahan susu adalah bagian dari proses.', meta: 'Backup' },
+];
+
+const gallery = [
+  { src: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=1200&q=85&auto=format&fit=crop', loc: 'New Family', cls: 'gi-wide' },
+  { src: 'https://images.unsplash.com/photo-1492366254240-43affaefc3e3?w=900&q=85&auto=format&fit=crop', loc: 'Toddler', cls: 'gi-tall' },
+  { src: 'https://images.unsplash.com/photo-1555252586-91d8d92a02e7?w=1000&q=85&auto=format&fit=crop', loc: 'Studio', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=1000&q=85&auto=format&fit=crop', loc: 'With Mama', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?w=1000&q=85&auto=format&fit=crop', loc: 'With Papa', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1531983412531-1f49a365ffed?w=1200&q=85&auto=format&fit=crop', loc: 'Sibling', cls: 'gi-wide' },
+];
+
+const faqs = [
+  { q: 'Apa beda Baby & Family dengan sesi Baby biasa?', a: 'Sesi Baby fokus pada bayi solo (props, themed set). Sesi Baby & Family fokus pada interaksi & emosi keluarga muda — banyak close-up pelukan, ciuman, tertawa bareng. Kalau bingung, kita bisa kombinasi.' },
+  { q: 'Sebaiknya umur bayi berapa untuk sesi ini?', a: 'Idealnya 3 bulan ke atas (sudah lebih responsif & smiley). Newborn bisa, tapi nuansa lebih ke quiet/sleepy. Toddler 1–2 tahun juga sangat lucu — banyak gerakan tak terduga.' },
+  { q: 'Berapa orang yang bisa ikut sesi?', a: 'Standard untuk 3–5 orang (orang tua + 1–3 anak). Lebih dari itu kami sarankan upgrade ke sesi Family lengkap dengan kakek-nenek karena butuh setup lebih besar.' },
+  { q: 'Bagaimana kalau bayi tidak mau dilepas pelukan?', a: 'Tidak masalah — banyak shot terbaik justru saat bayi nyaman dipeluk. Kami adapt ke mood bayi. Kalau hari itu bayi clingy, sesi lebih banyak family shot bersama; kalau bayi happy, lebih banyak solo pose.' },
+  { q: 'Bisa untuk maternity announcement (perut besar + anak pertama)?', a: 'Bisa — kombinasi maternity + sibling sangat sweet. Sebut saat booking agar kami siapkan setup yang accommodate ibu hamil & toddler bersamaan.' },
+  { q: 'Berapa lama hasil foto siap?', a: 'Sneak peek 5–10 foto dalam 3 hari. Final delivery (full edited gallery) ±2 minggu setelah sesi.' },
+];
+
+const related = relatedTo('baby-family', 3);
+---
+<BaseLayout title={title} description={description} schema={schema}>
+  <section class="subhero">
+    <div class="subhero-img" style="background-image:url('https://images.unsplash.com/photo-1511895426328-dc8714191300?w=2000&q=85&auto=format&fit=crop')"></div>
+    <div class="subhero-grain"></div>
+    <div class="subhero-content">
+      <div class="breadcrumb">
+        <a href={url('/')} data-hover>Beranda</a>
+        <span class="breadcrumb-sep"></span>
+        <a href={url('/layanan/')} data-hover>Layanan</a>
+        <span class="breadcrumb-sep"></span>
+        <span class="breadcrumb-current">Baby &amp; Family</span>
+      </div>
+      <h1>Kebersamaan,<br /><em>keluarga muda.</em></h1>
+      <div class="subhero-meta">
+        <div class="subhero-meta-text">"Tahun pertama bersama si kecil. Ketika rumah pertama kali punya tangis & tawa baru."</div>
+        <div class="subhero-meta-tags">
+          <span>Studio · Jembrana</span>
+          <span>1.5 Jam</span>
+          <span>Lifestyle</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INCLUDES -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Yang Termasuk</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Foto bayi <em>+</em> momen<br />keluarga muda.</h2>
+    </div>
+    <div class="incl-grid">
+      {includes.map((it) => (
+        <div class="incl-card reveal-up">
+          <div class="incl-card-icon">{it.icon}</div>
+          <div class="incl-card-name">{it.name}</div>
+          <div class="incl-card-desc">{it.desc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- CONCEPTS -->
+  <section class="section section-alt">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Pilihan Konsep</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Setiap keluarga,<br /><em>vibe yang unik.</em></h2>
+    </div>
+    <div class="incl-grid">
+      {concepts.map((c) => (
+        <div class="incl-card reveal-up">
+          <div class="incl-card-icon">{c.tag.charAt(0)}</div>
+          <div class="incl-card-name">{c.name}</div>
+          <div class="incl-card-desc">{c.desc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- WARDROBE -->
+  <section class="section">
+    <div class="section-inner-narrow" style="max-width:1100px;margin:0 auto">
+      <div class="section-label reveal-up">— Wardrobe Tips</div>
+      <h2 class="section-title reveal-up">Tampil <em>match</em><br />tanpa terlalu serius.</h2>
+      <p class="section-text reveal-up">
+        Koordinasi outfit keluarga adalah kunci hasil yang harmonious. Tips di bawah berdasarkan ratusan sesi family kami.
+      </p>
+    </div>
+    <ol class="feature-list reveal-up" style="margin-top:60px">
+      {wardrobeTips.map((t) => (
+        <li>
+          <div>
+            <div class="feature-list-name">{t.name}</div>
+            <div class="feature-list-desc">{t.desc}</div>
+          </div>
+          <div class="feature-list-meta">{t.meta}</div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section section-alt">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Karya Baby & Family</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Setiap keluarga,<br /><em>cerita yang hangat.</em></h2>
+    </div>
+    <div class="gallery-grid" style="margin-top:60px">
+      {gallery.map((g) => (
+        <div class={`gallery-item ${g.cls}`} data-hover>
+          <img src={g.src} alt={`Baby & Family ${g.loc}`} loading="lazy" />
+          <div class="gallery-item-meta">{g.loc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Pertanyaan Umum</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">FAQ <em>seputar baby & family.</em></h2>
+    </div>
+    <ul class="faq-list" style="margin-top:60px">
+      {faqs.map((item) => (
+        <li class="faq-item reveal-up">
+          <div class="faq-q">
+            <span>{item.q}</span>
+            <span class="faq-q-icon">+</span>
+          </div>
+          <div class="faq-a"><div class="faq-a-inner">{item.a}</div></div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <CTA
+    label="— Booking Baby & Family"
+    heading="Mari abadikan<br /><em>tahun pertama bersama.</em>"
+    text="Konsultasi gratis via WhatsApp. Sebutkan umur bayi, jumlah anggota yang ikut, dan vibe yang dibayangkan — kita susun sesi yang pas."
+    showInfo={false}
+  />
+
+  <RelatedServices items={related.map((s) => ({ num: s.num, name: s.name, href: s.href, image: s.image }))} />
+</BaseLayout>

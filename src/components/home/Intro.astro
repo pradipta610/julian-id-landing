@@ -1,0 +1,55 @@
+---
+interface Stat {
+  value: string; // for animated count, use plain integer string; otherwise display as-is
+  label: string;
+  count?: number; // optional — when set, value will animate from 0 to count
+}
+
+interface Props {
+  label?: string;
+  heading?: string; // HTML string, supports <em>
+  paragraphs?: string[];
+  image?: string;
+  badge?: string;
+  stats?: Stat[];
+}
+
+const {
+  label = '— Tentang',
+  heading = 'Bukan sekadar foto.<br>Sebuah <em>kenangan.</em>',
+  paragraphs = [
+    'Julian Photography adalah studio foto yang berbasis di <strong style="color:var(--fg);font-weight:400">Negara, Jembrana, Bali</strong>. Kami memadukan ketenangan studio dengan keindahan alam Bali untuk mengabadikan momen-momen paling personal.',
+    'Wedding & prewedding outdoor di seluruh Bali. Maternity, newborn, baby, dan family di studio kami yang dirancang dengan natural light & set yang lembut.',
+  ],
+  image = 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1200&q=85&auto=format&fit=crop',
+  badge = 'Studio · Jembrana',
+  stats = [
+    { value: '4.9', label: 'Google Rating' },
+    { value: '414', label: 'Ulasan', count: 414 },
+    { value: '7', label: 'Layanan Foto', count: 7 },
+  ],
+} = Astro.props;
+---
+<section class="intro" id="tentang">
+  <div class="intro-grid">
+    <div class="intro-img-wrap reveal-img">
+      <img src={image} alt="Julian Photography Studio" />
+      <div class="intro-img-badge">{badge}</div>
+    </div>
+    <div>
+      <div class="intro-label reveal-up">{label}</div>
+      <h2 class="reveal-up" set:html={heading}></h2>
+      {paragraphs.map((p) => (
+        <p class="intro-text reveal-up" set:html={p}></p>
+      ))}
+      <div class="intro-stats">
+        {stats.map((s) => (
+          <div class="reveal-up">
+            <div class="stat-num" data-count={s.count ?? ''}>{s.value}</div>
+            <div class="stat-label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

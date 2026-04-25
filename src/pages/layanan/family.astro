@@ -1,0 +1,189 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedServices from '../../components/RelatedServices.astro';
+import CTA from '../../components/home/CTA.astro';
+import { url } from '../../utils/url';
+import { relatedTo } from '../../data/services';
+
+const title = 'Family Photography — Studio & Outdoor';
+const description =
+  'Sesi keluarga lengkap di Julian Photography Negara, Jembrana — anak, orang tua, kakek-nenek. Studio classic atau outdoor di Bali. Style: classic posed atau lifestyle.';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Family Photography',
+  description,
+  provider: { '@id': 'https://juliansphotography.com/#business' },
+  serviceType: 'Family Photography',
+};
+
+const includes = [
+  { icon: 'I', name: 'Sesi 2 Jam', desc: 'Cukup waktu untuk family group + sub-group (couple, sibling, individual) + candid.' },
+  { icon: 'II', name: 'Studio atau Outdoor', desc: 'Pilihan: studio classic Jembrana atau outdoor di Bali (pantai, garden, sawah).' },
+  { icon: 'III', name: 'Multi-Generation Welcome', desc: 'Kakek-nenek hingga cucu — sampai 12 anggota keluarga dalam 1 sesi.' },
+  { icon: 'IV', name: 'Sub-Group Combinations', desc: 'Foto besar lengkap + foto pasangan + foto sibling + individual portrait.' },
+  { icon: 'V', name: 'Edited Hi-Res Photos', desc: '60–100 foto edited dengan tone konsisten, siap cetak hingga A2.' },
+  { icon: 'VI', name: 'Online Gallery', desc: 'Akses gallery online untuk download high-res, mudah di-share ke seluruh keluarga.' },
+];
+
+const styles = [
+  { name: 'Classic Posed', desc: 'Pose formal di studio dengan backdrop neutral. Komposisi rapi, semua melihat kamera. Cocok untuk frame ruang tamu / hadiah pernikahan emas orang tua.', tag: 'Formal' },
+  { name: 'Lifestyle Cerita', desc: 'Lebih banyak interaksi: ngobrol, candid, jalan bareng. Mood relax & natural. Cocok untuk keluarga yang merasa kaku saat pose formal.', tag: 'Natural' },
+  { name: 'Outdoor Bali', desc: 'Sesi di lokasi outdoor (pantai, sawah, garden villa). Membutuhkan timing pagi atau sore. Hasilnya warm, golden, dan locale-rich.', tag: 'Outdoor' },
+  { name: 'Studio Themed', desc: 'Backdrop tema (boho, vintage, monochrome dramatic). Cocok untuk hadiah ultah orang tua atau anniversary spesial.', tag: 'Theme' },
+];
+
+const wardrobeTips = [
+  { name: 'Pilih Palette Warna', desc: '2–3 warna komplementer untuk seluruh keluarga. Contoh palette aman: cream + sage + caramel, atau navy + cream + camel. Bagikan palette ke semua anggota sebelum hari-H.', meta: 'Palette' },
+  { name: 'Hindari Logo & Pattern Besar', desc: 'Polos atau pattern halus akan timeless. Logo brand mengalihkan fokus dari ekspresi. Untuk pattern, batasi 1 orang saja sebagai accent.', meta: 'Print' },
+  { name: 'Layered Texture', desc: 'Variasi tekstur (knit + linen + denim + leather belt) lebih fotogenik daripada semuanya kain sama. Tambahkan vest, scarf, atau cardigan untuk depth.', meta: 'Texture' },
+  { name: 'Sesuaikan dengan Lokasi', desc: 'Studio: bisa lebih bold & monochrome. Outdoor pantai: light & airy. Outdoor sawah: earth tone. Hindari putih murni di outdoor karena over-expose.', meta: 'Context' },
+  { name: 'Sepatu Konsisten', desc: 'Sepatu sering terlihat di full-body shot — pastikan style & warnanya match. Sneakers casual cocok untuk outdoor lifestyle, formal shoes untuk classic studio.', meta: 'Footwear' },
+  { name: 'Aksesori Personal', desc: 'Boleh bawa item personal: jam kakek, kalung mama, mainan favorit anak. Detail kecil ini sering jadi shot favorit di album.', meta: 'Personal' },
+];
+
+const gallery = [
+  { src: 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=1200&q=85&auto=format&fit=crop', loc: 'Studio Classic', cls: 'gi-wide' },
+  { src: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=900&q=85&auto=format&fit=crop', loc: 'Lifestyle', cls: 'gi-tall' },
+  { src: 'https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?w=1000&q=85&auto=format&fit=crop', loc: 'Outdoor', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1492366254240-43affaefc3e3?w=1000&q=85&auto=format&fit=crop', loc: 'Multi-Gen', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1518152006812-edab29b069ac?w=1000&q=85&auto=format&fit=crop', loc: 'Garden', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1531983412531-1f49a365ffed?w=1200&q=85&auto=format&fit=crop', loc: 'Sibling', cls: 'gi-wide' },
+];
+
+const faqs = [
+  { q: 'Berapa banyak orang yang bisa ikut sesi family?', a: 'Standard hingga 8 orang nyaman di studio. Untuk keluarga besar (10–15 orang), kami sarankan upgrade ke sesi outdoor atau studio extended dengan setup khusus. Lebih dari 15 orang biasanya pakai venue terpisah.' },
+  { q: 'Studio atau outdoor lebih bagus?', a: 'Tergantung mood yang diinginkan. Studio: lebih kontrol pencahayaan, AC nyaman, weather-proof. Outdoor: locale-rich, golden hour magical, lebih banyak gerakan natural. Kami bisa kombinasi keduanya dalam 1 hari.' },
+  { q: 'Bagaimana mengatur banyak anak kecil dalam 1 sesi?', a: 'Kunci: jadwalkan sesi 1–2 jam setelah anak bangun siang & full feed. Bawa snack & mainan favorit. Kami flexible — kalau anak rewel, kita pivot ke individual portraits dulu sambil tunggu mood pulih.' },
+  { q: 'Bisa untuk acara family reunion / ultah orang tua?', a: 'Bisa banget. Sesi keluarga reunion kami bisa di venue acara (rumah / restoran / villa) atau di studio sebelum/sesudah acara. Sebut spesifikasi saat booking — kami siapkan setup.' },
+  { q: 'Apakah hair & make-up disertakan?', a: 'Tidak by default — tapi kami punya rekomendasi MUA langganan. Untuk family yang ingin koordinasi look (terutama mama-mama & anak perempuan), bisa kami connect.' },
+  { q: 'Berapa lama hasil foto siap?', a: 'Sneak peek 5–10 foto dalam 3–5 hari. Final delivery (full edited gallery) ±2 minggu setelah sesi. Album fisik tambahan ±2–3 minggu.' },
+];
+
+const related = relatedTo('family', 3);
+---
+<BaseLayout title={title} description={description} schema={schema}>
+  <section class="subhero">
+    <div class="subhero-img" style="background-image:url('https://images.unsplash.com/photo-1609220136736-443140cffec6?w=2000&q=85&auto=format&fit=crop')"></div>
+    <div class="subhero-grain"></div>
+    <div class="subhero-content">
+      <div class="breadcrumb">
+        <a href={url('/')} data-hover>Beranda</a>
+        <span class="breadcrumb-sep"></span>
+        <a href={url('/layanan/')} data-hover>Layanan</a>
+        <span class="breadcrumb-sep"></span>
+        <span class="breadcrumb-current">Family</span>
+      </div>
+      <h1>Foto keluarga,<br /><em>untuk semua generasi.</em></h1>
+      <div class="subhero-meta">
+        <div class="subhero-meta-text">"Foto keluarga adalah salah satu warisan paling berharga. Kami bantu kamu mengabadikannya dengan style yang kamu suka."</div>
+        <div class="subhero-meta-tags">
+          <span>Studio / Outdoor</span>
+          <span>2 Jam</span>
+          <span>Multi-Gen</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INCLUDES -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Yang Termasuk</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Sesi yang <em>fleksibel,</em><br />untuk keluarga apapun.</h2>
+    </div>
+    <div class="incl-grid">
+      {includes.map((it) => (
+        <div class="incl-card reveal-up">
+          <div class="incl-card-icon">{it.icon}</div>
+          <div class="incl-card-name">{it.name}</div>
+          <div class="incl-card-desc">{it.desc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- STYLES -->
+  <section class="section section-alt">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Pilihan Style</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Pilih mood<br /><em>yang paling kamu suka.</em></h2>
+    </div>
+    <div class="incl-grid">
+      {styles.map((s) => (
+        <div class="incl-card reveal-up">
+          <div class="incl-card-icon">{s.tag.charAt(0)}</div>
+          <div class="incl-card-name">{s.name}</div>
+          <div class="incl-card-desc">{s.desc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- WARDROBE COORDINATION -->
+  <section class="section">
+    <div class="section-inner-narrow" style="max-width:1100px;margin:0 auto">
+      <div class="section-label reveal-up">— Wardrobe Coordination</div>
+      <h2 class="section-title reveal-up">Koordinasi outfit<br /><em>untuk hasil terbaik.</em></h2>
+      <p class="section-text reveal-up">
+        Wardrobe yang harmonis adalah 50% dari kesuksesan family photo. Tips di bawah ini berdasarkan ratusan sesi keluarga yang sudah kami foto.
+      </p>
+    </div>
+    <ol class="feature-list reveal-up" style="margin-top:60px">
+      {wardrobeTips.map((t) => (
+        <li>
+          <div>
+            <div class="feature-list-name">{t.name}</div>
+            <div class="feature-list-desc">{t.desc}</div>
+          </div>
+          <div class="feature-list-meta">{t.meta}</div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section section-alt">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Karya Family</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">Setiap keluarga,<br /><em>cerita yang panjang.</em></h2>
+    </div>
+    <div class="gallery-grid" style="margin-top:60px">
+      {gallery.map((g) => (
+        <div class={`gallery-item ${g.cls}`} data-hover>
+          <img src={g.src} alt={`Family ${g.loc}`} loading="lazy" />
+          <div class="gallery-item-meta">{g.loc}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Pertanyaan Umum</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">FAQ <em>seputar family.</em></h2>
+    </div>
+    <ul class="faq-list" style="margin-top:60px">
+      {faqs.map((item) => (
+        <li class="faq-item reveal-up">
+          <div class="faq-q">
+            <span>{item.q}</span>
+            <span class="faq-q-icon">+</span>
+          </div>
+          <div class="faq-a"><div class="faq-a-inner">{item.a}</div></div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <CTA
+    label="— Booking Family"
+    heading="Mari rencanakan<br /><em>foto keluarga-mu.</em>"
+    text="Konsultasi gratis via WhatsApp. Sebutkan jumlah anggota, style yang dibayangkan, dan preferensi studio/outdoor — kita susun yang pas."
+    showInfo={false}
+  />
+
+  <RelatedServices items={related.map((s) => ({ num: s.num, name: s.name, href: s.href, image: s.image }))} />
+</BaseLayout>

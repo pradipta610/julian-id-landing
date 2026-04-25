@@ -1,0 +1,24 @@
+---
+interface Props {
+  items?: string[];
+}
+const {
+  items = [
+    'Wedding',
+    'Prewedding',
+    'Maternity',
+    'Newborn',
+    'Baby',
+    'Family',
+    'Studio Jembrana',
+  ],
+} = Astro.props;
+
+// Duplicate so animation loop is seamless
+const loop = [...items, ...items];
+---
+<div class="marquee">
+  <div class="marquee-track">
+    {loop.map((label) => <span>{label}</span>)}
+  </div>
+</div>

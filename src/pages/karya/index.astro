@@ -1,0 +1,391 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CTA from '../../components/home/CTA.astro';
+import { url } from '../../utils/url';
+import { portfolio, categories, featuredStories, marqueeRows } from '../../data/portfolio';
+import { services } from '../../data/services';
+
+const title = 'Karya — Portofolio Julian Photography Bali';
+const description =
+  'Portofolio karya Julian Photography: wedding di Uluwatu, prewedding di Ubud, maternity, newborn, baby milestone, dan family portraits. Terkurasi dari ratusan sesi.';
+
+// Count items per category for filter badges
+const categoryCounts: Record<string, number> = { all: portfolio.length };
+portfolio.forEach((p) => {
+  categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
+});
+
+// Sample image per category — used by floating cursor preview on filter hover
+const previewByCategory: Record<string, { image: string; name: string }> = {
+  all: { image: portfolio[0].image, name: 'Semua Karya' },
+};
+categories.forEach((c) => {
+  if (c.slug === 'all') return;
+  const sample = portfolio.find((p) => p.category === c.slug);
+  if (sample) previewByCategory[c.slug] = { image: sample.image, name: c.name };
+});
+
+const serviceByCategory = Object.fromEntries(services.map((s) => [s.slug, s]));
+const { row1, row2 } = marqueeRows();
+
+// Schema: ImageGallery with ItemList of photographs
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ImageGallery',
+  name: 'Portofolio Julian Photography',
+  description,
+  url: 'https://juliansphotography.com/id/karya/',
+  image: portfolio.slice(0, 12).map((p) => ({
+    '@type': 'ImageObject',
+    contentUrl: p.image,
+    name: p.title,
+    contentLocation: p.location,
+  })),
+  provider: { '@id': 'https://juliansphotography.com/#business' },
+};
+
+const heroImage = portfolio[0].image;
+---
+<BaseLayout title={title} description={description} schema={schema}>
+  <!-- ======================= CINEMATIC HERO ======================= -->
+  <section class="kh">
+    <div class="kh-bg">
+      <img id="khBg" src={heroImage} alt="Karya Julian Photography — portofolio Bali" />
+    </div>
+    <div class="kh-grain"></div>
+    <div class="kh-content">
+      <div class="breadcrumb" style="margin-bottom:32px">
+        <a href={url('/')} data-hover>Beranda</a>
+        <span class="breadcrumb-sep"></span>
+        <span class="breadcrumb-current">Karya</span>
+      </div>
+      <div class="kh-label">Portofolio · Sejak 2005</div>
+      <h1 class="kh-title">
+        <span class="kh-line kh-line-1"><span>Karya.</span></span>
+        <span class="kh-line kh-line-2"><span><em>Cerita yang kami<br />abadikan, bingkai demi bingkai.</em></span></span>
+      </h1>
+      <div class="kh-meta">
+        <div class="kh-meta-categories">
+          Wedding<span>·</span>Prewedding<span>·</span>Maternity<span>·</span>Newborn<span>·</span>Baby<span>·</span>Baby &amp; Family<span>·</span>Family
+        </div>
+        <div class="kh-meta-info">
+          {portfolio.length}+ proyek terkurasi<br />Negara, Jembrana · Bali
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= STATS ======================= -->
+  <section class="pf-stats">
+    <div class="info-strip" style="margin:0 auto;max-width:1600px">
+      <div class="info-strip-item">
+        <div class="info-strip-label">Sesi Terdokumentasi</div>
+        <div class="info-strip-value"><em>500</em>+</div>
+      </div>
+      <div class="info-strip-item">
+        <div class="info-strip-label">Pengalaman</div>
+        <div class="info-strip-value"><em>20</em>+ tahun</div>
+      </div>
+      <div class="info-strip-item">
+        <div class="info-strip-label">Kategori Layanan</div>
+        <div class="info-strip-value"><em>7</em> jenis</div>
+      </div>
+      <div class="info-strip-item">
+        <div class="info-strip-label">Area Liputan</div>
+        <div class="info-strip-value">Seluruh <em>Bali</em></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= FILTER BAR (sticky, below nav) ======================= -->
+  <div class="pf-filter" id="pfFilter">
+    <div class="pf-filter-inner">
+      {categories.map((c, i) => (
+        <button
+          type="button"
+          class={`pf-filter-btn ${i === 0 ? 'is-active' : ''}`}
+          data-filter={c.slug}
+          data-preview-img={previewByCategory[c.slug]?.image}
+          data-preview-name={previewByCategory[c.slug]?.name}
+          data-hover
+        >
+          {c.name}
+          <span class="pf-filter-btn-count">{categoryCounts[c.slug] || 0}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <!-- Floating cursor-follow preview (desktop only, hidden by CSS on touch) -->
+  <div class="pf-preview" id="pfPreview" aria-hidden="true">
+    <img id="pfPreviewImg" src="" alt="" />
+    <div class="pf-preview-caption" id="pfPreviewCaption"></div>
+  </div>
+
+  <!-- ======================= MASONRY GRID ======================= -->
+  <section class="pf-section">
+    <div class="pf-grid" id="pfGrid">
+      {portfolio.map((item, i) => (
+        <a
+          class={`pf-item pf-item-${item.span}`}
+          data-cat={item.category}
+          data-hover
+          style={`--i:${i}`}
+          href={item.slug ? url(`/karya/${item.slug}/`) : url(`/layanan/${item.category}/`)}
+          aria-label={`${item.title} — ${item.location}`}
+        >
+          <img src={item.image} alt={`${item.title} — ${item.location}`} loading={i < 6 ? 'eager' : 'lazy'} />
+          <span class="pf-item-cat">{serviceByCategory[item.category]?.name || item.category}</span>
+          <div class="pf-item-caption">
+            <div>
+              <div class="pf-item-caption-title">{item.title}</div>
+              <div class="pf-item-caption-meta">{item.location}</div>
+            </div>
+            <div class="pf-item-caption-meta">'{String(item.year).slice(2)}</div>
+          </div>
+        </a>
+      ))}
+      <div class="pf-empty" id="pfEmpty" hidden>Belum ada karya di kategori ini — cek lagi nanti.</div>
+    </div>
+  </section>
+
+  <!-- ======================= MARQUEE w/ MIX-BLEND BIG TEXT ======================= -->
+  <section class="pf-marquee-section">
+    <div class="pf-marquee-bgtext">Bali · Indonesia</div>
+    <div class="pf-marquee-head">
+      <div class="section-label">— Glimpses</div>
+      <h2 class="section-title" style="margin-left:auto;margin-right:auto;font-size:clamp(36px,5vw,72px)">Ratusan momen,<br /><em>satu pulau.</em></h2>
+    </div>
+    <div class="pf-marquee">
+      <div class="pf-marquee-row">
+        {[...row1, ...row1].map((src, i) => (
+          <div class="pf-marquee-item" data-hover>
+            <img src={src} alt="" loading="lazy" aria-hidden={i >= row1.length} />
+          </div>
+        ))}
+      </div>
+      <div class="pf-marquee-row pf-marquee-row-reverse">
+        {[...row2, ...row2].map((src, i) => (
+          <div class="pf-marquee-item" data-hover>
+            <img src={src} alt="" loading="lazy" aria-hidden={i >= row2.length} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= FEATURED STORIES — magazine spread ======================= -->
+  <section class="pf-stories">
+    <div class="pf-stories-head">
+      <div>
+        <div class="pf-stories-head-meta reveal-up">Cerita Pilihan</div>
+        <h2 class="reveal-up">Di balik<br /><em>setiap bingkai.</em></h2>
+      </div>
+      <p class="reveal-up" style="max-width:420px;color:var(--fg-muted);line-height:1.8;font-weight:300;font-size:15px;padding-bottom:14px">
+        Beberapa sesi yang meninggalkan kesan spesial. Dari sunset Uluwatu hingga pagi tenang di studio — setiap cerita punya mood yang unik.
+      </p>
+    </div>
+    <div class="pf-stories-grid">
+      {featuredStories.map((story, i) => (
+        <a
+          class="pf-story"
+          href={story.slug ? url(`/karya/${story.slug}/`) : url(`/layanan/${story.category}/`)}
+          data-hover
+          aria-label={`${story.title} — ${story.location}`}
+        >
+          <div class="pf-story-img" data-tilt>
+            <div class="pf-story-img-inner">
+              <img src={story.image} alt={`${story.title} — ${story.location}`} loading="lazy" />
+            </div>
+          </div>
+          <div class="pf-story-text">
+            <div class="pf-story-num">{String(i + 1).padStart(2, '0')}.</div>
+            <div class="pf-story-cat">{serviceByCategory[story.category]?.name || story.category} · {story.year}</div>
+            <div class="pf-story-title">{story.title}</div>
+            <div class="pf-story-meta">{story.location}</div>
+            <span class="pf-story-link">
+              Lihat Cerita
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ======================= CTA ======================= -->
+  <CTA
+    label="— Siap Menulis Cerita?"
+    heading="Mari buat<br /><em>bab baru bersama.</em>"
+    text="Setiap cerita di portofolio ini dimulai dengan satu chat WhatsApp. Yuk mulai ceritamu."
+    showInfo={false}
+  />
+
+  <!-- ======================= INLINE: filter + reveal + animations ======================= -->
+  <script is:inline data-astro-rerun>
+    (function () {
+      function initPortfolio() {
+        var grid = document.getElementById('pfGrid');
+        if (!grid) return;
+
+        var items = Array.prototype.slice.call(grid.querySelectorAll('.pf-item'));
+        var empty = document.getElementById('pfEmpty');
+        var filterBtns = Array.prototype.slice.call(document.querySelectorAll('.pf-filter-btn'));
+        var preview = document.getElementById('pfPreview');
+        var previewImg = document.getElementById('pfPreviewImg');
+        var previewCaption = document.getElementById('pfPreviewCaption');
+
+        // -------- 1. Stagger reveal via IntersectionObserver (defensive) --------
+        // Strategy: items are visible by default in CSS. Only HIDE them via .pf-anim-init
+        // when we know IntersectionObserver works. Then observer reveals via .is-visible.
+        // Safety net: force-show all items after 4s no matter what.
+        if ('IntersectionObserver' in window) {
+          // Hide initially
+          items.forEach(function (el) { el.classList.add('pf-anim-init'); });
+
+          // Per-batch reveal index for sensible stagger (resets when items enter viewport in groups)
+          var revealIdx = 0;
+          var lastRevealTime = 0;
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting && !entry.target.classList.contains('is-visible')) {
+                var now = Date.now();
+                // Reset reveal index if 250ms gap since last reveal (= new batch)
+                if (now - lastRevealTime > 250) revealIdx = 0;
+                lastRevealTime = now;
+                // Cap stagger at 8 to avoid super-long delays
+                entry.target.style.setProperty('--ir', Math.min(revealIdx++, 8));
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+          items.forEach(function (el) { io.observe(el); });
+
+          // Safety: after 4 seconds force any still-hidden item to show
+          window.setTimeout(function () {
+            items.forEach(function (el) {
+              if (!el.classList.contains('is-visible')) {
+                el.style.setProperty('--ir', 0);
+                el.classList.add('is-visible');
+              }
+            });
+          }, 4000);
+        } else {
+          items.forEach(function (el) { el.classList.add('is-visible'); });
+        }
+
+        // -------- 2. Hero parallax --------
+        var khBg = document.getElementById('khBg');
+        if (khBg && window.gsap && window.ScrollTrigger) {
+          window.gsap.registerPlugin(window.ScrollTrigger);
+          window.gsap.to(khBg, {
+            yPercent: 18,
+            ease: 'none',
+            scrollTrigger: { trigger: '.kh', start: 'top top', end: 'bottom top', scrub: true },
+          });
+        }
+
+        // -------- 3. Filter logic --------
+        function applyFilter(filter) {
+          var visibleCount = 0;
+          items.forEach(function (item) {
+            var match = filter === 'all' || item.dataset.cat === filter;
+            if (match) {
+              item.classList.remove('is-hidden');
+              item.style.display = '';
+              visibleCount++;
+            } else {
+              item.classList.add('is-hidden');
+              window.setTimeout(function () {
+                if (item.classList.contains('is-hidden')) item.style.display = 'none';
+              }, 400);
+            }
+          });
+          if (empty) empty.hidden = visibleCount > 0;
+          if (window.ScrollTrigger) {
+            window.setTimeout(function () { window.ScrollTrigger.refresh(); }, 450);
+          }
+        }
+
+        filterBtns.forEach(function (btn) {
+          if (btn.dataset.pfBound) return;
+          btn.dataset.pfBound = '1';
+
+          // Click: filter
+          btn.addEventListener('click', function () {
+            filterBtns.forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+            applyFilter(btn.dataset.filter);
+          });
+
+          // Hover: floating preview + magnetic effect
+          btn.addEventListener('mouseenter', function () {
+            if (!preview || !previewImg) return;
+            var img = btn.dataset.previewImg;
+            var name = btn.dataset.previewName;
+            if (img) {
+              previewImg.src = img;
+              if (previewCaption) previewCaption.textContent = name || '';
+              preview.classList.add('is-visible');
+            }
+          });
+          btn.addEventListener('mouseleave', function () {
+            if (preview) preview.classList.remove('is-visible');
+            btn.style.transform = '';
+          });
+
+          // Magnetic effect on cursor-near
+          btn.addEventListener('mousemove', function (e) {
+            var r = btn.getBoundingClientRect();
+            var x = e.clientX - (r.left + r.width / 2);
+            var y = e.clientY - (r.top + r.height / 2);
+            btn.style.transform = 'translate(' + (x * 0.25) + 'px, ' + (y * 0.4) + 'px)';
+          });
+        });
+
+        // -------- 4. Floating preview cursor follow --------
+        if (preview) {
+          var lastX = 0, lastY = 0, currentX = 0, currentY = 0, rafId = null;
+          function tick() {
+            currentX += (lastX - currentX) * 0.18;
+            currentY += (lastY - currentY) * 0.18;
+            preview.style.left = currentX + 'px';
+            preview.style.top = currentY + 'px';
+            rafId = window.requestAnimationFrame(tick);
+          }
+          document.addEventListener('mousemove', function (e) {
+            lastX = e.clientX + 130; // offset from cursor
+            lastY = e.clientY - 20;
+            if (!rafId) tick();
+          });
+        }
+
+        // -------- 5. 3D tilt on featured stories --------
+        var tiltEls = Array.prototype.slice.call(document.querySelectorAll('[data-tilt]'));
+        tiltEls.forEach(function (el) {
+          if (el.dataset.tiltBound) return;
+          el.dataset.tiltBound = '1';
+          var inner = el.querySelector('.pf-story-img-inner');
+          if (!inner) return;
+          el.addEventListener('mousemove', function (e) {
+            var r = el.getBoundingClientRect();
+            var x = (e.clientX - r.left) / r.width - 0.5;
+            var y = (e.clientY - r.top) / r.height - 0.5;
+            inner.style.transform =
+              'perspective(1200px) rotateY(' + (x * 8) + 'deg) rotateX(' + (-y * 8) + 'deg) scale(1.02)';
+          });
+          el.addEventListener('mouseleave', function () {
+            inner.style.transform = '';
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPortfolio);
+      } else {
+        initPortfolio();
+      }
+      document.addEventListener('astro:page-load', initPortfolio);
+    })();
+  </script>
+</BaseLayout>

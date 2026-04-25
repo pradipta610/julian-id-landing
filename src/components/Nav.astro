@@ -1,0 +1,15 @@
+---
+import { url } from '../utils/url';
+import Logo from './Logo.astro';
+---
+<nav>
+  <a href={url('/')} class="nav-logo" data-hover aria-label="Julian Photography — Beranda">
+    <Logo size={48} />
+  </a>
+  <div class="nav-links">
+    <a href={url('/tentang/')} data-hover>Tentang</a>
+    <a href={url('/layanan/')} data-hover>Layanan</a>
+    <a href={url('/karya/')} data-hover>Karya</a>
+    <a href={url('/kontak/')} data-hover>Kontak</a>
+  </div>
+</nav>

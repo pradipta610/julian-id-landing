@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../utils/url';
+
+const title = 'Kontak';
+const description =
+  'Hubungi Julian Photography di Negara, Jembrana, Bali. Konsultasi gratis lewat WhatsApp 0821-4594-5051 untuk wedding, prewedding, maternity, newborn, baby, dan family photography.';
+
+const kontakSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'Kontak Julian Photography',
+    description,
+    inLanguage: 'id-ID',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Berapa lama waktu balasan setelah saya kirim pesan?',
+    a: 'Biasanya kami balas dalam 1–6 jam pada jam operasional (Sen 11.00–16.00, Sel 07.00–17.00, Rab–Min 09.00–17.00 WITA). Untuk respon tercepat, langsung WhatsApp ke 0821-4594-5051.',
+  },
+  {
+    q: 'Apakah harus DP untuk booking sesi?',
+    a: 'Iya, untuk reservasi tanggal kami minta DP (umumnya 30–50% dari paket, tergantung jenis sesi). Detailnya akan kami sampaikan saat konsultasi awal.',
+  },
+  {
+    q: 'Berapa lama hasil foto siap?',
+    a: 'Newborn / baby / maternity / family: ±2 minggu setelah sesi. Wedding / prewedding: 4–8 minggu tergantung paket. Foto preview kami kirim lebih cepat (3–5 hari).',
+  },
+];
+---
+<BaseLayout title={title} description={description} schema={kontakSchema}>
+  <!-- ====== SUB-HERO ====== -->
+  <section class="subhero">
+    <div class="subhero-img" style="background-image:url('https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=2000&q=85&auto=format&fit=crop')"></div>
+    <div class="subhero-grain"></div>
+    <div class="subhero-content">
+      <div class="breadcrumb">
+        <a href={url('/')} data-hover>Beranda</a>
+        <span class="breadcrumb-sep"></span>
+        <span class="breadcrumb-current">Kontak</span>
+      </div>
+      <h1>Mari <em>ngobrol.</em></h1>
+      <div class="subhero-meta">
+        <div class="subhero-meta-text">"Konsultasi gratis. Ceritakan jenis sesi yang kamu rencanakan — kita bahas detailnya bareng."</div>
+        <div class="subhero-meta-tags">
+          <span>WhatsApp · Cepat</span>
+          <span>Konsultasi Gratis</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FORM + INFO ====== -->
+  <section class="section">
+    <div class="contact-grid">
+      <div>
+        <div class="section-label reveal-up">— Form Booking</div>
+        <h2 class="section-title reveal-up">Ceritakan tentang <em>sesi-mu.</em></h2>
+        <p class="section-text reveal-up">
+          Isi form di bawah, atau kalau lebih nyaman langsung WhatsApp aja. Kami biasanya balas dalam 1–6 jam pada jam operasional.
+        </p>
+
+        <form class="contact-form reveal-up" action="https://wa.me/6282145945051" method="get" data-form="whatsapp">
+          <div class="form-row">
+            <label for="name">Nama Lengkap</label>
+            <input id="name" name="name" type="text" placeholder="John Doe" required />
+          </div>
+          <div class="form-row">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="kamu@email.com" />
+          </div>
+          <div class="form-row">
+            <label for="wa">WhatsApp</label>
+            <input id="wa" name="wa" type="tel" placeholder="0812-xxxx-xxxx" required />
+          </div>
+          <div class="form-row">
+            <label for="service">Jenis Sesi</label>
+            <select id="service" name="service" required>
+              <option value="">— Pilih jenis sesi —</option>
+              <option value="wedding">Wedding</option>
+              <option value="prewedding">Prewedding</option>
+              <option value="maternity">Maternity</option>
+              <option value="newborn">Newborn</option>
+              <option value="baby">Baby</option>
+              <option value="baby-family">Baby &amp; Family</option>
+              <option value="family">Family</option>
+              <option value="lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="event-date">Perkiraan Tanggal</label>
+            <input id="event-date" name="event_date" type="date" />
+          </div>
+          <div class="form-row">
+            <label for="message">Pesan</label>
+            <textarea id="message" name="message" placeholder="Ceritakan rencana sesi, lokasi, jumlah orang, atau pertanyaan apa pun..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" data-hover style="align-self:flex-start">
+            <span>Kirim via WhatsApp</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </button>
+        </form>
+      </div>
+
+      <aside class="contact-info-side">
+        <div class="contact-info-block reveal-up">
+          <h4>WhatsApp</h4>
+          <p><a href="https://wa.me/6282145945051" target="_blank" rel="noopener">+62 821-4594-5051</a></p>
+          <p style="margin-top:8px;font-size:12px;color:var(--fg-dim)">Cara tercepat untuk konsultasi.</p>
+        </div>
+        <div class="contact-info-block reveal-up">
+          <h4>Alamat Studio</h4>
+          <p>
+            Baler Bale Agung<br />
+            Negara, Jembrana<br />
+            Bali 82218, Indonesia
+          </p>
+        </div>
+        <div class="contact-info-block reveal-up">
+          <h4>Jam Operasional</h4>
+          <p>
+            Senin · 11.00–16.00<br />
+            Selasa · 07.00–17.00<br />
+            Rabu–Minggu · 09.00–17.00
+          </p>
+        </div>
+        <div class="contact-info-block reveal-up">
+          <h4>Sosial Media</h4>
+          <p>
+            <a href="https://www.instagram.com/julian_photography/" target="_blank" rel="noopener">IG · Outdoor</a><br />
+            <a href="https://www.instagram.com/julianphotostudio" target="_blank" rel="noopener">IG · Studio</a><br />
+            <a href="https://www.facebook.com/juliankomang6" target="_blank" rel="noopener">Facebook</a>
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Map placeholder — Negara, Jembrana, Bali -->
+    <div class="map-wrap reveal-up">
+      <iframe
+        title="Lokasi Studio Julian Photography di Negara, Jembrana, Bali"
+        src="https://www.google.com/maps?q=Baler+Bale+Agung,+Negara,+Jembrana,+Bali&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+  </section>
+
+  <!-- ====== FAQ ====== -->
+  <section class="section section-alt">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-label reveal-up">— Pertanyaan Umum</div>
+      <h2 class="section-title reveal-up" style="margin-left:auto;margin-right:auto">FAQ <em>singkat.</em></h2>
+    </div>
+
+    <ul class="faq-list">
+      {faqs.map((item) => (
+        <li class="faq-item reveal-up">
+          <div class="faq-q">
+            <span>{item.q}</span>
+            <span class="faq-q-icon">+</span>
+          </div>
+          <div class="faq-a">
+            <div class="faq-a-inner">{item.a}</div>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
