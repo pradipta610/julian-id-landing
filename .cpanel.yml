@@ -1,5 +1,25 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/u1427052/public_html/id/
-    - /usr/bin/rsync -av --delete --exclude='.git' --exclude='.github' --exclude='.cpanel.yml' --exclude='README.md' --exclude='.gitignore' ./ $DEPLOYPATH
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: SSH and pull
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull latest code on Hostinger
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            cd /home/u1427052/public_html/id/
+            git fetch origin master
+            git reset --hard origin/master
+            echo "✅ Deploy completed at $(date)"
