@@ -63,21 +63,30 @@ const faqs = [
           Isi form di bawah, atau kalau lebih nyaman langsung WhatsApp aja. Kami biasanya balas dalam 1–6 jam pada jam operasional.
         </p>
 
-        <form class="contact-form reveal-up" action="https://wa.me/6282145945051" method="get" data-form="whatsapp">
+        <form
+          class="contact-form reveal-up"
+          id="kontakForm"
+          data-form="whatsapp"
+          data-wa-number="6282145945051"
+          novalidate
+        >
           <div class="form-row">
-            <label for="name">Nama Lengkap</label>
-            <input id="name" name="name" type="text" placeholder="John Doe" required />
+            <label for="name">Nama Lengkap <span class="form-required">*</span></label>
+            <input id="name" name="name" type="text" placeholder="John Doe" required autocomplete="name" />
+            <span class="form-error" data-error-for="name"></span>
           </div>
           <div class="form-row">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" placeholder="kamu@email.com" />
+            <label for="email">Email <span class="form-optional">(opsional)</span></label>
+            <input id="email" name="email" type="email" placeholder="kamu@email.com" autocomplete="email" />
+            <span class="form-error" data-error-for="email"></span>
           </div>
           <div class="form-row">
-            <label for="wa">WhatsApp</label>
-            <input id="wa" name="wa" type="tel" placeholder="0812-xxxx-xxxx" required />
+            <label for="wa">WhatsApp <span class="form-required">*</span></label>
+            <input id="wa" name="wa" type="tel" placeholder="0812-xxxx-xxxx" required autocomplete="tel" inputmode="tel" />
+            <span class="form-error" data-error-for="wa"></span>
           </div>
           <div class="form-row">
-            <label for="service">Jenis Sesi</label>
+            <label for="service">Jenis Sesi <span class="form-required">*</span></label>
             <select id="service" name="service" required>
               <option value="">— Pilih jenis sesi —</option>
               <option value="wedding">Wedding</option>
@@ -89,19 +98,68 @@ const faqs = [
               <option value="family">Family</option>
               <option value="lainnya">Lainnya</option>
             </select>
+            <span class="form-error" data-error-for="service"></span>
           </div>
           <div class="form-row">
-            <label for="event-date">Perkiraan Tanggal</label>
-            <input id="event-date" name="event_date" type="date" />
+            <label for="event-date">Perkiraan Tanggal <span class="form-optional">(opsional)</span></label>
+            <div class="form-date-wrap">
+              <input
+                id="event-date"
+                name="event_date"
+                type="text"
+                placeholder="Pilih tanggal sesi..."
+                readonly
+                autocomplete="off"
+                data-date-picker
+              />
+              <span class="form-date-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M3 9h18M8 3v4M16 3v4" stroke-linecap="round" />
+                  <circle cx="8" cy="14" r="1" fill="currentColor" />
+                  <circle cx="12" cy="14" r="1" fill="currentColor" />
+                  <circle cx="16" cy="14" r="1" fill="currentColor" />
+                </svg>
+              </span>
+              <button type="button" class="form-date-clear" id="formDateClear" aria-label="Hapus tanggal" data-hover hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="M6 6l12 12M6 18L18 6" />
+                </svg>
+              </button>
+            </div>
           </div>
           <div class="form-row">
-            <label for="message">Pesan</label>
-            <textarea id="message" name="message" placeholder="Ceritakan rencana sesi, lokasi, jumlah orang, atau pertanyaan apa pun..."></textarea>
+            <label for="location">Lokasi Sesi <span class="form-optional">(opsional)</span></label>
+            <input id="location" name="location" type="text" placeholder="Misal: Uluwatu, Studio, Rumah klien..." />
+          </div>
+          <div class="form-row">
+            <label for="message">Pesan <span class="form-optional">(opsional)</span></label>
+            <textarea id="message" name="message" placeholder="Ceritakan rencana sesi, jumlah orang, paket yang diminati, atau pertanyaan apa pun..."></textarea>
           </div>
           <button type="submit" class="btn btn-primary" data-hover style="align-self:flex-start">
-            <span>Kirim via WhatsApp</span>
+            <span class="btn-label-default">Kirim via WhatsApp</span>
+            <span class="btn-label-sending" aria-hidden="true">Membuka WhatsApp...</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
           </button>
+
+          <!-- Success state — shown after submit -->
+          <div class="form-success" id="formSuccess" hidden role="status" aria-live="polite">
+            <div class="form-success-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <h3 class="form-success-title">WhatsApp terbuka di tab baru</h3>
+            <p class="form-success-text">
+              Pesan kamu sudah ter-format rapi dan siap dikirim. Tinggal tekan <strong>Send</strong> di WhatsApp ya.
+            </p>
+            <p class="form-success-text" style="font-size:13px;color:var(--fg-muted)">
+              Tab tidak terbuka? <a id="formSuccessRetry" href="#" class="form-success-link" data-hover>Klik di sini</a> untuk buka manual.
+            </p>
+            <button type="button" class="form-success-reset" id="formSuccessReset" data-hover>
+              Kirim pesan baru
+            </button>
+          </div>
         </form>
       </div>
 
@@ -138,14 +196,28 @@ const faqs = [
       </aside>
     </div>
 
-    <!-- Map placeholder — Negara, Jembrana, Bali -->
+    <!-- Map — Julian Photography (business pin di Google Maps) -->
     <div class="map-wrap reveal-up">
       <iframe
         title="Lokasi Studio Julian Photography di Negara, Jembrana, Bali"
-        src="https://www.google.com/maps?q=Baler+Bale+Agung,+Negara,+Jembrana,+Bali&output=embed"
+        src="https://www.google.com/maps?q=Julian+Photography+Negara+Jembrana+Bali&output=embed&z=16"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
       ></iframe>
+      <a
+        href="https://maps.app.goo.gl/THqhueYwJkfTpKt3A"
+        target="_blank"
+        rel="noopener"
+        class="map-open-link"
+        data-hover
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+        <span>Buka di Google Maps</span>
+      </a>
     </div>
   </section>
 
@@ -170,4 +242,263 @@ const faqs = [
       ))}
     </ul>
   </section>
+
+  <!-- =============== Flatpickr (date picker) — loaded via CDN =============== -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" />
+  <script is:inline src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js" defer></script>
+  <script is:inline src="https://npmcdn.com/flatpickr/dist/l10n/id.js" defer></script>
+
+  <!-- =============== WhatsApp Form Handler =============== -->
+  <script is:inline data-astro-rerun>
+    (function () {
+      var SERVICE_LABELS = {
+        wedding: 'Wedding',
+        prewedding: 'Prewedding',
+        maternity: 'Maternity',
+        newborn: 'Newborn',
+        baby: 'Baby',
+        'baby-family': 'Baby & Family',
+        family: 'Family',
+        lainnya: 'Lainnya',
+      };
+      var DAY_NAMES = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      var MONTH_NAMES = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+      function formatDate(iso) {
+        if (!iso) return '';
+        var parts = iso.split('-');
+        if (parts.length !== 3) return iso;
+        var d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        if (isNaN(d.getTime())) return iso;
+        return DAY_NAMES[d.getDay()] + ', ' + d.getDate() + ' ' + MONTH_NAMES[d.getMonth()] + ' ' + d.getFullYear();
+      }
+
+      function formatPhone(raw) {
+        if (!raw) return '';
+        // Strip everything except digits and +
+        var cleaned = raw.replace(/[^\d+]/g, '');
+        // If starts with 0, replace with +62 (Indonesia)
+        if (cleaned.charAt(0) === '0') cleaned = '+62' + cleaned.slice(1);
+        // If starts with 62 without +, prepend +
+        else if (cleaned.indexOf('+') !== 0 && cleaned.charAt(0) === '6' && cleaned.charAt(1) === '2') cleaned = '+' + cleaned;
+        return cleaned;
+      }
+
+      function buildMessage(data) {
+        var lines = [];
+        lines.push('Halo Julian Photography! 👋');
+        lines.push('');
+        lines.push('Saya ingin booking sesi foto dengan detail berikut:');
+        lines.push('');
+        lines.push('*— Data Diri*');
+        lines.push('Nama: ' + data.name);
+        if (data.email) lines.push('Email: ' + data.email);
+        lines.push('WhatsApp: ' + formatPhone(data.wa));
+        lines.push('');
+        lines.push('*— Rencana Sesi*');
+        lines.push('Jenis: ' + (SERVICE_LABELS[data.service] || data.service));
+        if (data.event_date) lines.push('Tanggal: ' + formatDate(data.event_date));
+        if (data.location) lines.push('Lokasi: ' + data.location);
+        if (data.message && data.message.trim()) {
+          lines.push('');
+          lines.push('*— Pesan*');
+          lines.push(data.message.trim());
+        }
+        lines.push('');
+        lines.push('Mohon info paket dan ketersediaan tanggalnya ya. Terima kasih!');
+        return lines.join('\n');
+      }
+
+      function validateField(field, errorEl) {
+        var val = (field.value || '').trim();
+        var msg = '';
+
+        if (field.hasAttribute('required') && !val) {
+          msg = 'Wajib diisi.';
+        } else if (field.type === 'email' && val) {
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) msg = 'Format email tidak valid.';
+        } else if (field.type === 'tel' && val) {
+          var digits = val.replace(/\D/g, '');
+          if (digits.length < 9 || digits.length > 15) msg = 'Nomor WhatsApp tidak valid.';
+        }
+
+        if (errorEl) {
+          errorEl.textContent = msg;
+          errorEl.classList.toggle('is-visible', !!msg);
+        }
+        field.classList.toggle('is-invalid', !!msg);
+        return !msg;
+      }
+
+      // ---------- Date picker init (flatpickr) ----------
+      var datePickerInstance = null;
+      function initDatePicker() {
+        var input = document.querySelector('[data-date-picker]');
+        if (!input || input.dataset.fpBound) return;
+        if (typeof window.flatpickr !== 'function') return; // not loaded yet
+        input.dataset.fpBound = '1';
+
+        var clearBtn = document.getElementById('formDateClear');
+
+        // Remove readonly so flatpickr's altInput inherits from the right state
+        input.removeAttribute('readonly');
+
+        datePickerInstance = window.flatpickr(input, {
+          locale: (window.flatpickr.l10ns && window.flatpickr.l10ns.id) ? 'id' : 'default',
+          dateFormat: 'Y-m-d',                  // hidden ISO (submitted with form)
+          altInput: true,                       // creates a sibling visible input
+          altFormat: 'l, j F Y',                // visible: "Sabtu, 15 Juni 2026"
+          minDate: 'today',
+          maxDate: new Date().fp_incr(365 * 2),
+          disableMobile: false,                 // always use custom calendar (not native)
+          monthSelectorType: 'static',
+          showMonths: 1,
+          animate: true,
+          position: 'auto',
+          onReady: function (_sel, _str, instance) {
+            // Apply class to alt input so we can target it with CSS
+            if (instance.altInput) {
+              instance.altInput.classList.add('form-date-display');
+              instance.altInput.placeholder = 'Pilih tanggal sesi...';
+              instance.altInput.setAttribute('autocomplete', 'off');
+            }
+          },
+          onChange: function (selectedDates) {
+            if (clearBtn) clearBtn.hidden = !selectedDates.length;
+          },
+          onOpen: function (_sel, _str, instance) {
+            if (instance.altInput) instance.altInput.classList.add('is-open');
+          },
+          onClose: function (_sel, _str, instance) {
+            if (instance.altInput) instance.altInput.classList.remove('is-open');
+          },
+        });
+
+        // Clear button
+        if (clearBtn && !clearBtn.dataset.bound) {
+          clearBtn.dataset.bound = '1';
+          clearBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (datePickerInstance) datePickerInstance.clear();
+            input.value = '';
+            input.dataset.iso = '';
+            clearBtn.hidden = true;
+          });
+        }
+      }
+
+      // Try init immediately and again after CDN scripts load
+      function tryInitDatePicker() {
+        if (typeof window.flatpickr === 'function') initDatePicker();
+        else window.setTimeout(tryInitDatePicker, 100);
+      }
+
+      function initContactForm() {
+        var form = document.getElementById('kontakForm');
+        if (!form || form.dataset.bound) return;
+        form.dataset.bound = '1';
+
+        var successEl = document.getElementById('formSuccess');
+        var resetBtn = document.getElementById('formSuccessReset');
+        var retryLink = document.getElementById('formSuccessRetry');
+        var waNumber = form.dataset.waNumber || '6282145945051';
+        var lastWaUrl = '';
+
+        // Init date picker (waits for CDN)
+        tryInitDatePicker();
+
+        // Inline validation on blur
+        var fields = form.querySelectorAll('input, select, textarea');
+        fields.forEach(function (f) {
+          var errorEl = form.querySelector('[data-error-for="' + f.id + '"]');
+          f.addEventListener('blur', function () { validateField(f, errorEl); });
+          f.addEventListener('input', function () {
+            if (f.classList.contains('is-invalid')) validateField(f, errorEl);
+          });
+        });
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          // Validate all required fields
+          var allValid = true;
+          fields.forEach(function (f) {
+            var errorEl = form.querySelector('[data-error-for="' + f.id + '"]');
+            if (!validateField(f, errorEl)) allValid = false;
+          });
+
+          if (!allValid) {
+            // Focus first invalid field
+            var firstInvalid = form.querySelector('.is-invalid');
+            if (firstInvalid) {
+              firstInvalid.focus();
+              firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            return;
+          }
+
+          // Collect form data
+          var formData = new FormData(form);
+          var data = {};
+          formData.forEach(function (value, key) { data[key] = value; });
+
+          // Build formatted WhatsApp message
+          var message = buildMessage(data);
+          var waUrl = 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent(message);
+          lastWaUrl = waUrl;
+
+          // Show "sending" state on button
+          form.classList.add('is-submitting');
+
+          // Open WhatsApp in new tab
+          var newTab = window.open(waUrl, '_blank', 'noopener,noreferrer');
+
+          // After a short delay, show success state
+          window.setTimeout(function () {
+            form.classList.remove('is-submitting');
+            form.classList.add('is-success');
+            if (successEl) {
+              successEl.hidden = false;
+              if (retryLink) retryLink.href = waUrl;
+              successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 600);
+
+          // Fallback: if popup blocked, suggest manual click
+          if (!newTab) {
+            // The retry link will still work as a regular anchor
+            console.warn('Popup blocker may have blocked WhatsApp tab. User can click "Klik di sini" link.');
+          }
+        });
+
+        // "Kirim pesan baru" — reset form
+        if (resetBtn && !resetBtn.dataset.bound) {
+          resetBtn.dataset.bound = '1';
+          resetBtn.addEventListener('click', function () {
+            form.reset();
+            form.classList.remove('is-success');
+            if (successEl) successEl.hidden = true;
+            // Clear all error states
+            form.querySelectorAll('.is-invalid').forEach(function (f) { f.classList.remove('is-invalid'); });
+            form.querySelectorAll('.form-error.is-visible').forEach(function (e) {
+              e.classList.remove('is-visible');
+              e.textContent = '';
+            });
+            // Focus first field
+            var firstField = form.querySelector('input, select, textarea');
+            if (firstField) firstField.focus();
+            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initContactForm);
+      } else {
+        initContactForm();
+      }
+      document.addEventListener('astro:page-load', initContactForm);
+    })();
+  </script>
 </BaseLayout>

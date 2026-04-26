@@ -5,6 +5,7 @@ import Loader from '../components/Loader.astro';
 import CustomCursor from '../components/CustomCursor.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import FloatingActions from '../components/FloatingActions.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -61,6 +62,7 @@ const {
     <slot />
 
     <Footer />
+    <FloatingActions />
 
     <script src="../scripts/animations.js"></script>
   </body>

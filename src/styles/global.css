@@ -517,14 +517,124 @@ footer{position:relative;background:#0a0a0a;border-top:1px solid var(--line);ove
 .section-text strong{color:var(--fg);font-weight:400}
 
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);max-width:1400px;margin:0 auto}
-.contact-form{display:flex;flex-direction:column;gap:24px}
+.contact-form{display:flex;flex-direction:column;gap:24px;position:relative;transition:opacity .4s var(--ease)}
+.contact-form.is-submitting{pointer-events:none}
+.contact-form.is-success > :not(.form-success){opacity:.15;pointer-events:none;filter:blur(2px);transition:opacity .5s var(--ease),filter .5s var(--ease)}
 .form-row{display:grid;gap:8px}
-.form-row label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-muted);font-weight:500}
+.form-row label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-muted);font-weight:500;display:flex;align-items:baseline;gap:8px}
+.form-required{color:var(--accent);font-size:14px;letter-spacing:0;line-height:1}
+.form-optional{font-size:9px;letter-spacing:2px;color:var(--fg-muted);opacity:.6;text-transform:lowercase;font-style:italic;font-family:var(--serif)}
 .form-row input,.form-row select,.form-row textarea{background:transparent;border:none;border-bottom:1px solid var(--line);padding:12px 0;color:var(--fg);font-family:inherit;font-size:15px;font-weight:300;transition:border-color .3s}
 .form-row input:focus,.form-row select:focus,.form-row textarea:focus{outline:none;border-bottom-color:var(--accent)}
+.form-row input.is-invalid,.form-row select.is-invalid,.form-row textarea.is-invalid{border-bottom-color:#e85a4f}
 .form-row textarea{resize:vertical;min-height:100px;font-family:var(--serif);font-style:italic}
 .form-row select{cursor:pointer;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 12px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
 .form-row select option{background:var(--bg)}
+
+/* ---------- DATE PICKER (flatpickr custom theme) ---------- */
+.form-date-wrap{position:relative;display:flex;align-items:center}
+.form-date-wrap input[data-date-picker]{display:none!important} /* hide raw ISO; alt input shown */
+.form-date-wrap .form-date-display,
+.form-date-wrap input[data-date-picker]:not(.flatpickr-input){
+  /* This is the visible alt-input flatpickr injects — style as our normal underlined field */
+  flex:1;width:100%;background:transparent;border:none;border-bottom:1px solid var(--line);padding:12px 36px 12px 0;color:var(--fg);font-family:inherit;font-size:15px;font-weight:300;cursor:pointer;transition:border-color .3s,color .3s;letter-spacing:0;text-transform:none
+}
+.form-date-display::placeholder{color:var(--fg-muted);opacity:.6;font-style:italic;font-family:var(--serif)}
+.form-date-display:focus,.form-date-display.is-open{outline:none;border-bottom-color:var(--accent);color:var(--fg)}
+.form-date-icon{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--fg-muted);pointer-events:none;transition:color .3s var(--ease),transform .3s var(--ease)}
+.form-date-icon svg{width:100%;height:100%}
+.form-date-display:focus ~ .form-date-icon,.form-date-display.is-open ~ .form-date-icon{color:var(--accent);transform:translateY(-50%) scale(1.05)}
+.form-date-clear{position:absolute;right:32px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.06);border:0;color:var(--fg-muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;transition:background-color .3s,color .3s,transform .3s var(--ease);z-index:2}
+.form-date-clear:hover{background:#e85a4f;color:var(--fg);transform:translateY(-50%) scale(1.1)}
+.form-date-clear svg{width:11px;height:11px}
+.form-date-clear[hidden]{display:none!important}
+
+/* ===== Flatpickr calendar — fully restyled to match brand ===== */
+.flatpickr-calendar{background:rgba(15,15,15,.96)!important;backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);border:1px solid rgba(255,255,255,.1)!important;border-radius:0!important;box-shadow:0 30px 80px -20px rgba(0,0,0,.85),0 0 0 1px rgba(201,169,110,.06)!important;font-family:var(--sans);color:var(--fg);width:380px!important;max-width:calc(100vw - 24px);padding:14px}
+.flatpickr-calendar.arrowTop::before,.flatpickr-calendar.arrowTop::after,.flatpickr-calendar.arrowBottom::before,.flatpickr-calendar.arrowBottom::after{display:none!important}
+.flatpickr-calendar.animate.open{animation:fpFadeIn .4s var(--ease)}
+@keyframes fpFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Header — month navigation */
+.flatpickr-months{padding:8px 4px 16px;display:flex;align-items:center;gap:8px}
+.flatpickr-month{background:transparent!important;color:var(--fg)!important;height:auto!important;padding:0!important;flex:1;display:flex;align-items:center;justify-content:center;overflow:visible}
+.flatpickr-current-month{padding:0!important;font-size:0;display:flex;gap:6px;align-items:baseline;justify-content:center;font-weight:300;width:auto;left:0;right:0;position:relative}
+.flatpickr-current-month .flatpickr-monthDropdown-months{font-family:var(--serif)!important;font-style:italic;font-weight:300;font-size:22px!important;color:var(--fg)!important;background:transparent!important;border:0;padding:4px 8px;cursor:pointer;letter-spacing:-.01em;appearance:none;-webkit-appearance:none;text-transform:none;line-height:1}
+.flatpickr-current-month .flatpickr-monthDropdown-months:focus,.flatpickr-current-month .flatpickr-monthDropdown-months:hover{background:rgba(201,169,110,.08)!important;outline:none}
+.flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month{background:var(--bg)!important;color:var(--fg)!important;font-style:normal;font-family:var(--sans);font-size:13px}
+.flatpickr-current-month input.cur-year{font-family:var(--serif)!important;font-style:italic;font-weight:300;font-size:22px!important;color:var(--accent)!important;background:transparent!important;border:0;width:64px;padding:4px 6px;text-align:center;line-height:1}
+.flatpickr-current-month input.cur-year:focus{outline:none;background:rgba(201,169,110,.08)!important}
+.flatpickr-current-month .numInputWrapper{width:auto}
+.flatpickr-current-month .numInputWrapper span{border:0!important;background:rgba(255,255,255,.05)!important}
+.flatpickr-current-month .numInputWrapper span:hover{background:var(--accent)!important}
+.flatpickr-current-month .numInputWrapper span.arrowUp::after{border-bottom-color:var(--accent)!important}
+.flatpickr-current-month .numInputWrapper span.arrowDown::after{border-top-color:var(--accent)!important}
+.flatpickr-current-month .numInputWrapper span:hover.arrowUp::after{border-bottom-color:var(--bg)!important}
+.flatpickr-current-month .numInputWrapper span:hover.arrowDown::after{border-top-color:var(--bg)!important}
+
+/* Prev/Next month arrow buttons */
+.flatpickr-prev-month,.flatpickr-next-month{position:relative!important;width:38px;height:38px;display:inline-flex!important;align-items:center;justify-content:center;color:var(--fg-muted)!important;fill:var(--fg-muted)!important;border-radius:50%;transition:background-color .3s var(--ease),color .3s var(--ease),transform .3s var(--ease);padding:0!important;top:auto!important;flex-shrink:0}
+.flatpickr-prev-month:hover,.flatpickr-next-month:hover{background:var(--accent)!important;color:var(--bg)!important;fill:var(--bg)!important}
+.flatpickr-prev-month svg,.flatpickr-next-month svg{width:15px;height:15px;fill:currentColor!important}
+
+/* Weekday labels */
+.flatpickr-weekdays{padding:6px 0 8px;background:transparent!important;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+.flatpickr-weekdaycontainer{display:grid!important;grid-template-columns:repeat(7,1fr)!important;width:100%!important;gap:6px}
+span.flatpickr-weekday{font-family:var(--sans)!important;font-size:10px!important;letter-spacing:2px!important;text-transform:uppercase;color:var(--fg-muted)!important;font-weight:500!important;background:transparent!important;text-align:center;padding:6px 0;width:auto!important;flex:initial!important;display:flex;align-items:center;justify-content:center}
+
+/* Day grid — 7 equal columns, each cell perfect square via aspect-ratio */
+.flatpickr-days{padding:0;width:100%!important;display:block!important}
+.flatpickr-rContainer{width:100%!important}
+.dayContainer{padding:0;width:100%!important;min-width:0!important;max-width:none!important;display:grid!important;grid-template-columns:repeat(7,1fr)!important;gap:6px;justify-items:stretch}
+.flatpickr-day{font-family:var(--sans);font-size:14px;font-weight:400;color:var(--fg);background:transparent;border:1px solid transparent;border-radius:50%!important;width:100%!important;max-width:none!important;min-width:0!important;height:auto!important;aspect-ratio:1;line-height:1!important;flex-basis:auto!important;margin:0!important;padding:0!important;display:flex!important;align-items:center;justify-content:center;transition:background-color .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease),transform .25s var(--ease),box-shadow .25s var(--ease);box-sizing:border-box;position:relative}
+.flatpickr-day:hover,.flatpickr-day:focus{background:rgba(201,169,110,.14)!important;border-color:rgba(201,169,110,.35)!important;color:var(--fg)!important;outline:none;transform:scale(1.08)}
+.flatpickr-day.today{border-color:var(--accent)!important;color:var(--accent)!important;font-weight:600}
+.flatpickr-day.today::after{content:'';position:absolute;bottom:18%;left:50%;width:4px;height:4px;border-radius:50%;background:var(--accent);transform:translateX(-50%)}
+.flatpickr-day.today:hover{background:rgba(201,169,110,.2)!important}
+.flatpickr-day.selected,.flatpickr-day.selected:hover,.flatpickr-day.selected:focus{background:var(--accent)!important;border-color:var(--accent)!important;color:var(--bg)!important;font-weight:600;box-shadow:0 8px 20px -6px rgba(201,169,110,.55),0 0 0 4px rgba(201,169,110,.12)!important;transform:scale(1)}
+.flatpickr-day.selected.today::after{background:var(--bg)}
+.flatpickr-day.prevMonthDay,.flatpickr-day.nextMonthDay{color:rgba(255,255,255,.18)!important;font-weight:300}
+.flatpickr-day.prevMonthDay:hover,.flatpickr-day.nextMonthDay:hover{background:rgba(255,255,255,.04)!important;border-color:transparent!important;color:var(--fg-muted)!important;transform:none}
+.flatpickr-day.flatpickr-disabled,.flatpickr-day.flatpickr-disabled:hover{color:rgba(255,255,255,.1)!important;background:transparent!important;border-color:transparent!important;cursor:not-allowed;text-decoration:line-through;text-decoration-color:rgba(255,255,255,.15);transform:none;font-weight:300}
+.flatpickr-day.inRange,.flatpickr-day.startRange,.flatpickr-day.endRange{background:rgba(201,169,110,.15)!important;border-color:rgba(201,169,110,.3)!important;box-shadow:none!important}
+
+/* Footer hidden (no time picker for our use case) */
+.flatpickr-time{display:none!important}
+
+/* Mobile: smaller calendar fits viewport, slightly bigger touch targets */
+@media(max-width:600px){
+  .flatpickr-calendar{width:calc(100vw - 24px)!important;max-width:360px;padding:12px}
+  .flatpickr-current-month .flatpickr-monthDropdown-months,.flatpickr-current-month input.cur-year{font-size:20px!important}
+  .flatpickr-day{font-size:15px}
+  .dayContainer{gap:4px}
+  .flatpickr-weekdaycontainer{gap:4px}
+}
+.form-error{font-family:var(--serif);font-style:italic;font-size:12px;color:#e85a4f;font-weight:300;letter-spacing:0;text-transform:none;opacity:0;max-height:0;overflow:hidden;transition:opacity .3s var(--ease),max-height .3s var(--ease),margin-top .3s var(--ease)}
+.form-error.is-visible{opacity:1;max-height:24px;margin-top:4px}
+
+/* Submit button label swap when submitting */
+.btn-label-sending{display:none}
+.is-submitting .btn-label-default{display:none}
+.is-submitting .btn-label-sending{display:inline}
+.is-submitting .btn-primary svg{animation:btnSpin 1s linear infinite}
+@keyframes btnSpin{to{transform:rotate(360deg)}}
+
+/* Success state — overlay on top of (blurred) form */
+.form-success{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:40px 24px;background:linear-gradient(180deg,rgba(10,10,10,.4),rgba(10,10,10,.2));backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border:1px solid rgba(201,169,110,.15);animation:formSuccessIn .55s var(--ease)}
+.form-success[hidden]{display:none}
+@keyframes formSuccessIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.form-success-icon{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 16px 40px -10px rgba(37,211,102,.5);position:relative;animation:successPulse 1.6s ease-in-out infinite}
+.form-success-icon svg{width:34px;height:34px}
+.form-success-icon::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid #25D366;opacity:.3;animation:successRing 1.6s ease-out infinite}
+@keyframes successPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes successRing{0%{transform:scale(1);opacity:.5}100%{transform:scale(1.4);opacity:0}}
+.form-success-title{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(22px,2.5vw,32px);color:var(--fg);letter-spacing:-.01em;line-height:1.2;margin:0}
+.form-success-text{font-size:14px;color:var(--fg-muted);font-weight:300;line-height:1.6;max-width:400px;margin:0}
+.form-success-text strong{color:var(--fg);font-weight:500}
+.form-success-link{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.form-success-link:hover{color:var(--accent-hover)}
+.form-success-reset{margin-top:8px;padding:12px 24px;background:transparent;border:1px solid var(--line);color:var(--fg);cursor:pointer;font-family:var(--sans);font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:500;transition:background-color .35s var(--ease),border-color .35s var(--ease),color .35s var(--ease)}
+.form-success-reset:hover{background:var(--accent);border-color:var(--accent);color:var(--bg)}
 .contact-info-side{display:flex;flex-direction:column;gap:24px}
 .contact-info-block{padding:28px;border:1px solid var(--line);background:var(--bg-alt)}
 .contact-info-block h4{font-family:var(--serif);font-size:18px;font-weight:300;font-style:italic;margin-bottom:14px;color:var(--accent)}
@@ -534,8 +644,15 @@ footer{position:relative;background:#0a0a0a;border-top:1px solid var(--line);ove
 @media(max-width:900px){.contact-grid{grid-template-columns:1fr}}
 
 /* ===== MAP ===== */
-.map-wrap{aspect-ratio:16/9;overflow:hidden;border:1px solid var(--line);background:#0d0d0d;max-width:1400px;margin:60px auto 0}
-.map-wrap iframe{width:100%;height:100%;border:0;filter:grayscale(.6) invert(.92)}
+.map-wrap{position:relative;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--line);background:#0d0d0d;max-width:1400px;margin:60px auto 0}
+.map-wrap iframe{width:100%;height:100%;border:0;filter:grayscale(.6) invert(.92);transition:filter .5s var(--ease)}
+.map-wrap:hover iframe{filter:grayscale(.3) invert(.92)}
+/* Floating "Open in Google Maps" CTA — bottom-right of map */
+.map-open-link{position:absolute;right:clamp(14px,1.6vw,22px);bottom:clamp(14px,1.6vw,22px);display:inline-flex;align-items:center;gap:10px;padding:12px 18px;background:rgba(10,10,10,.88);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);border:1px solid rgba(255,255,255,.14);color:var(--fg);text-decoration:none;font-family:var(--sans);font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:500;transition:background-color .35s var(--ease),border-color .35s var(--ease),color .35s var(--ease),transform .35s var(--ease);box-shadow:0 12px 32px -8px rgba(0,0,0,.6);z-index:2}
+.map-open-link:hover{background:var(--accent);border-color:var(--accent);color:var(--bg);transform:translateY(-2px)}
+.map-open-link svg{width:14px;height:14px;flex-shrink:0;transition:transform .35s var(--ease)}
+.map-open-link:hover svg{transform:translateY(-2px) scale(1.1)}
+@media(max-width:600px){.map-open-link{font-size:10px;letter-spacing:2.5px;padding:10px 14px}.map-open-link svg{width:12px;height:12px}}
 
 /* ===== FAQ ===== */
 .faq-list{list-style:none;border-top:1px solid var(--line);max-width:900px;margin:0 auto}
@@ -813,4 +930,87 @@ footer{position:relative;background:#0a0a0a;border-top:1px solid var(--line);ove
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   .hero h1 .line span,.hero-tag,.hero-meta,.hero-scroll{transform:none;opacity:1}
+}
+
+/* ============ FLOATING ACTIONS (FAB) ============ */
+/* Bottom-right cluster: WhatsApp + Instagram x2 + Facebook + Scroll-to-Top
+   Glassmorphism + sliding tooltips + circular progress ring on scroll button */
+.fab{position:fixed;right:clamp(16px,2vw,28px);bottom:clamp(16px,2vw,28px);z-index:150;display:flex;flex-direction:column;align-items:flex-end;gap:12px;pointer-events:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
+.fab.is-hidden{opacity:0;transform:translateX(20px);pointer-events:none!important}
+
+/* Toggle button (only visible on tablet/mobile) */
+.fab-toggle{display:none;align-items:center;gap:10px;padding:12px 18px 12px 14px;background:linear-gradient(135deg,var(--accent),#8a6f3f);color:var(--bg);border:0;border-radius:999px;cursor:pointer;font-family:var(--sans);font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:600;box-shadow:0 16px 40px -10px rgba(0,0,0,.6),0 0 0 1px rgba(201,169,110,.3);transition:transform .35s var(--ease),box-shadow .35s var(--ease);pointer-events:auto;position:relative;z-index:2}
+.fab-toggle:hover,.fab-toggle:focus-visible{transform:translateY(-2px) scale(1.03);box-shadow:0 20px 50px -10px rgba(201,169,110,.4),0 0 0 1px rgba(201,169,110,.5)}
+.fab-toggle-icon{width:18px;height:18px;display:inline-flex;flex-direction:column;justify-content:center;align-items:center;gap:3px}
+.fab-toggle-dot{width:14px;height:1.5px;background:currentColor;border-radius:1px;transition:transform .4s var(--ease),opacity .25s var(--ease),width .35s var(--ease)}
+.fab.is-open .fab-toggle-dot:nth-child(1){transform:translateY(4.5px) rotate(45deg);width:14px}
+.fab.is-open .fab-toggle-dot:nth-child(2){opacity:0;width:0}
+.fab.is-open .fab-toggle-dot:nth-child(3){transform:translateY(-4.5px) rotate(-45deg);width:14px}
+.fab-toggle-label{line-height:1}
+
+/* Cluster of action buttons */
+.fab-cluster{display:flex;flex-direction:column;gap:10px;align-items:flex-end;pointer-events:auto}
+
+/* Action button base */
+.fab-btn{position:relative;width:clamp(48px,4vw,56px);height:clamp(48px,4vw,56px);border-radius:50%;background:rgba(20,20,20,.7);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);border:1px solid rgba(255,255,255,.12);color:var(--fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;transition:transform .4s var(--ease),background-color .4s var(--ease),border-color .4s var(--ease),box-shadow .4s var(--ease);box-shadow:0 12px 32px -8px rgba(0,0,0,.5);pointer-events:auto;flex-shrink:0;padding:0}
+.fab-btn:hover,.fab-btn:focus-visible{transform:translateY(-3px) scale(1.06);border-color:rgba(255,255,255,.25);box-shadow:0 18px 40px -10px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.05)}
+.fab-btn-icon{display:inline-flex;align-items:center;justify-content:center;width:55%;height:55%;position:relative;z-index:2}
+.fab-btn-icon svg{width:100%;height:100%}
+
+/* WhatsApp — primary, gold gradient + pulse */
+.fab-btn-wa{background:linear-gradient(135deg,#25D366,#128C7E);border-color:rgba(255,255,255,.2);color:#fff}
+.fab-btn-wa:hover{background:linear-gradient(135deg,#2cdf6f,#149c8b);border-color:rgba(255,255,255,.35);box-shadow:0 22px 50px -10px rgba(37,211,102,.45),0 0 0 1px rgba(255,255,255,.08)}
+.fab-btn-pulse{position:absolute;inset:0;border-radius:50%;background:#25D366;opacity:.5;animation:fabPulse 2.4s ease-out infinite;z-index:0}
+@keyframes fabPulse{0%{transform:scale(1);opacity:.45}100%{transform:scale(1.7);opacity:0}}
+
+/* Instagram — gradient on hover */
+.fab-btn-ig:hover,.fab-btn-ig-studio:hover{background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);border-color:rgba(255,255,255,.3);color:#fff;box-shadow:0 22px 50px -10px rgba(220,39,67,.4),0 0 0 1px rgba(255,255,255,.08)}
+
+/* Facebook — blue accent on hover */
+.fab-btn-fb:hover{background:#1877F2;border-color:rgba(255,255,255,.3);color:#fff;box-shadow:0 22px 50px -10px rgba(24,119,242,.4)}
+
+/* Scroll-to-top — hidden by default, shows after scroll */
+.fab-btn-top{margin-top:8px;opacity:0;transform:translateY(20px) scale(.7);pointer-events:none!important;transition:opacity .5s var(--ease),transform .5s var(--ease),background-color .4s var(--ease),border-color .4s var(--ease),box-shadow .4s var(--ease)}
+.fab.is-scrolled .fab-btn-top{opacity:1;transform:translateY(0) scale(1);pointer-events:auto!important}
+.fab-btn-top:hover{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.fab-btn-top:hover .fab-progress-track{stroke:rgba(10,10,10,.2)}
+.fab-btn-top:hover .fab-progress-bar{stroke:var(--bg)}
+
+/* Circular progress ring */
+.fab-progress{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none;z-index:1}
+.fab-progress-track{stroke:rgba(255,255,255,.08)}
+.fab-progress-bar{stroke:var(--accent);transition:stroke-dashoffset .15s linear,stroke .4s var(--ease);stroke-linecap:round}
+
+/* Tooltip — slides in from left on hover */
+.fab-btn-tip{position:absolute;right:calc(100% + 14px);top:50%;transform:translate(8px,-50%);padding:8px 14px;background:rgba(10,10,10,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;color:var(--fg);white-space:nowrap;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
+.fab-btn:hover .fab-btn-tip,.fab-btn:focus-visible .fab-btn-tip{opacity:1;transform:translate(0,-50%)}
+.fab-btn-tip::after{content:'';position:absolute;left:100%;top:50%;width:0;height:0;border-style:solid;border-width:5px 0 5px 6px;border-color:transparent transparent transparent rgba(10,10,10,.92);transform:translateY(-50%)}
+
+/* iOS safe area */
+@supports(padding:max(0px)){
+  .fab{bottom:max(clamp(16px,2vw,28px),env(safe-area-inset-bottom));right:max(clamp(16px,2vw,28px),env(safe-area-inset-right))}
+}
+
+/* ===== Tablet/Mobile: collapse cluster behind toggle ===== */
+@media(max-width:900px){
+  .fab{gap:0}
+  .fab-toggle{display:inline-flex;order:2}
+  .fab-cluster{order:1;margin-bottom:12px;display:flex;flex-direction:column;gap:10px;opacity:0;transform:translateY(20px) scale(.85);pointer-events:none;transition:opacity .4s var(--ease),transform .45s var(--ease)}
+  .fab-cluster .fab-btn{transform:translateY(20px) scale(.7);opacity:0;transition:transform .4s var(--ease),opacity .4s var(--ease),background-color .4s var(--ease),border-color .4s var(--ease),box-shadow .4s var(--ease)}
+  .fab.is-open .fab-cluster{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+  .fab.is-open .fab-cluster .fab-btn{transform:translateY(0) scale(1);opacity:1}
+  .fab.is-open .fab-cluster .fab-btn:nth-child(1){transition-delay:.05s}
+  .fab.is-open .fab-cluster .fab-btn:nth-child(2){transition-delay:.1s}
+  .fab.is-open .fab-cluster .fab-btn:nth-child(3){transition-delay:.15s}
+  .fab.is-open .fab-cluster .fab-btn:nth-child(4){transition-delay:.2s}
+  .fab-btn-top{order:3;margin-top:8px}
+  /* Tooltips less prominent on touch (no hover anyway) */
+  .fab-btn-tip{display:none}
+}
+
+@media(max-width:480px){
+  .fab{right:14px;bottom:14px;gap:0}
+  .fab-btn{width:46px;height:46px}
+  .fab-toggle{padding:10px 14px 10px 12px;font-size:9px;letter-spacing:2.5px}
+  .fab-toggle-label{display:none}
 }
