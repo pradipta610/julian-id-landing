@@ -653,14 +653,51 @@ footer{position:relative;background:#0a0a0a;border-top:1px solid var(--line);ove
 @media(max-width:900px){.kh-title{font-size:clamp(64px,18vw,180px)}.kh-title em{font-size:.42em}.kh-title .kh-line-2{padding-left:16px}}
 @media(max-width:700px){.kh{min-height:90vh}.kh-meta-info{text-align:left}.kh-meta-categories{max-width:100%}}
 
-/* ------- FILTER BAR (sticky, BELOW nav) ------- */
-.pf-filter{position:sticky;top:clamp(70px,8vw,90px);z-index:90;background:rgba(10,10,10,.85);backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px clamp(20px,4vw,60px)}
-.pf-filter-inner{max-width:1600px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
-.pf-filter-inner::-webkit-scrollbar{display:none}
-.pf-filter-btn{position:relative;padding:12px 22px;font-family:var(--sans);font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:500;color:var(--fg-muted);background:transparent;border:1px solid transparent;cursor:pointer;transition:color .35s var(--ease),border-color .35s var(--ease),background-color .35s var(--ease),transform .25s var(--ease);white-space:nowrap;border-radius:999px;will-change:transform}
-.pf-filter-btn:hover{color:var(--fg);border-color:var(--line)}
-.pf-filter-btn.is-active{color:var(--bg);background:var(--accent);border-color:var(--accent)}
-.pf-filter-btn-count{font-family:var(--serif);font-style:italic;margin-left:8px;opacity:.7;font-size:10px;letter-spacing:1px;text-transform:none}
+/* ------- EDITORIAL INDEX FILTER (sticky, two-row, sliding gold indicator) ------- */
+.pf-filter{position:sticky;top:clamp(70px,8vw,90px);z-index:90;background:rgba(10,10,10,.78);backdrop-filter:blur(28px) saturate(140%);-webkit-backdrop-filter:blur(28px) saturate(140%);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pf-filter-inner{max-width:1600px;margin:0 auto;padding:clamp(14px,1.6vw,22px) clamp(20px,4vw,60px) 0}
+
+/* Top meta row: label left, current selection right */
+.pf-filter-meta{display:flex;justify-content:space-between;align-items:baseline;gap:24px;flex-wrap:wrap;padding-bottom:clamp(12px,1.4vw,18px);border-bottom:1px solid rgba(255,255,255,.05)}
+.pf-filter-meta-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--accent);font-weight:500;display:inline-flex;align-items:center;gap:10px}
+.pf-filter-meta-current{display:inline-flex;align-items:baseline;gap:8px;font-size:13px;color:var(--fg-muted);font-weight:300;flex-wrap:wrap}
+.pf-filter-meta-current-prefix,.pf-filter-meta-current-suffix{font-family:var(--sans);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-muted);opacity:.7}
+.pf-filter-meta-current-name{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(18px,2.2vw,28px);color:var(--fg);letter-spacing:-.01em;line-height:1;transition:opacity .3s var(--ease),transform .35s var(--ease)}
+.pf-filter-meta-current-name.is-flipping{opacity:0;transform:translateY(-6px)}
+.pf-filter-meta-current-sep{color:var(--accent);opacity:.6;margin:0 4px}
+.pf-filter-meta-current-count{font-family:var(--serif);font-style:italic;font-weight:400;font-size:18px;color:var(--accent);transition:opacity .3s var(--ease)}
+.pf-filter-meta-current-count.is-flipping{opacity:0}
+
+/* Bottom nav row: numbered horizontal list with sliding indicator */
+.pf-filter-nav{position:relative;overflow:hidden}
+.pf-filter-nav-track{position:relative;display:flex;gap:clamp(20px,3vw,40px);overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:clamp(14px,1.4vw,20px) 0;scroll-behavior:smooth}
+.pf-filter-nav-track::-webkit-scrollbar{display:none}
+
+.pf-filter-item{position:relative;display:inline-flex;align-items:baseline;gap:10px;padding:6px 0;background:transparent;border:0;cursor:pointer;font-family:var(--sans);color:var(--fg-muted);transition:color .35s var(--ease),transform .35s var(--ease);white-space:nowrap;flex-shrink:0;text-align:left}
+.pf-filter-item:hover{color:var(--fg)}
+.pf-filter-item.is-active{color:var(--fg)}
+
+.pf-filter-item-num{font-family:var(--serif);font-style:italic;font-weight:300;font-size:13px;color:var(--accent);opacity:.55;letter-spacing:0;transition:opacity .35s var(--ease)}
+.pf-filter-item:hover .pf-filter-item-num,.pf-filter-item.is-active .pf-filter-item-num{opacity:1}
+.pf-filter-item-name{font-size:12px;letter-spacing:3px;text-transform:uppercase;font-weight:500}
+.pf-filter-item.is-active .pf-filter-item-name{font-weight:600}
+.pf-filter-item-count{font-family:var(--serif);font-style:italic;font-weight:300;font-size:11px;color:var(--fg-muted);opacity:.6;letter-spacing:0;transition:color .35s var(--ease),opacity .35s var(--ease)}
+.pf-filter-item:hover .pf-filter-item-count,.pf-filter-item.is-active .pf-filter-item-count{color:var(--accent);opacity:1}
+
+/* Sliding gold underline indicator — animated between active items */
+.pf-filter-indicator{position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--accent);transition:transform .55s cubic-bezier(.65,0,.35,1),width .55s cubic-bezier(.65,0,.35,1),opacity .35s var(--ease);transform:translateX(0);will-change:transform,width;pointer-events:none;border-radius:1px;box-shadow:0 0 12px rgba(201,169,110,.4)}
+.pf-filter-indicator::before{content:'';position:absolute;left:50%;bottom:100%;width:5px;height:5px;border-radius:50%;background:var(--accent);transform:translate(-50%,3px)}
+
+/* Mobile: stack the meta row, scroll items horizontally */
+@media(max-width:700px){
+  .pf-filter-meta{gap:8px;padding-bottom:10px}
+  .pf-filter-meta-current{font-size:12px}
+  .pf-filter-meta-current-name{font-size:18px}
+  .pf-filter-nav-track{gap:24px;padding:12px 0}
+  .pf-filter-item-name{font-size:11px;letter-spacing:2.5px}
+  .pf-filter-item-num{font-size:12px}
+  .pf-filter-item-count{font-size:10px}
+}
 
 /* Floating image preview that follows cursor on filter hover */
 .pf-preview{position:fixed;top:0;left:0;width:200px;height:260px;pointer-events:none;z-index:9990;opacity:0;transform:translate(-50%,-50%) scale(.85);transition:opacity .35s var(--ease),transform .5s var(--ease);will-change:transform,opacity;mix-blend-mode:normal;overflow:hidden;border:1px solid rgba(255,255,255,.15);box-shadow:0 30px 80px -20px rgba(0,0,0,.7)}

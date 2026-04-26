@@ -105,21 +105,44 @@ const heroImage = portfolio[0].image;
 
   <!-- ======================= FILTER + GRID (sticky scoped to this range) ======================= -->
   <div class="pf-range">
+    <!-- Editorial index bar: 2-row sticky header. Top row = label + dynamic selection, bottom row = numbered list with sliding gold indicator -->
     <div class="pf-filter" id="pfFilter">
       <div class="pf-filter-inner">
-        {categories.map((c, i) => (
-          <button
-            type="button"
-            class={`pf-filter-btn ${i === 0 ? 'is-active' : ''}`}
-            data-filter={c.slug}
-            data-preview-img={previewByCategory[c.slug]?.image}
-            data-preview-name={previewByCategory[c.slug]?.name}
-            data-hover
-          >
-            {c.name}
-            <span class="pf-filter-btn-count">{categoryCounts[c.slug] || 0}</span>
-          </button>
-        ))}
+        <!-- Top meta row -->
+        <div class="pf-filter-meta">
+          <div class="pf-filter-meta-label">— Index of Works</div>
+          <div class="pf-filter-meta-current" aria-live="polite">
+            <span class="pf-filter-meta-current-prefix">Showing</span>
+            <em class="pf-filter-meta-current-name" id="pfFilterCurrentName">Semua Karya</em>
+            <span class="pf-filter-meta-current-sep">·</span>
+            <span class="pf-filter-meta-current-count" id="pfFilterCurrentCount">{portfolio.length}</span>
+            <span class="pf-filter-meta-current-suffix">frames</span>
+          </div>
+        </div>
+
+        <!-- Bottom nav row -->
+        <nav class="pf-filter-nav" aria-label="Filter kategori karya">
+          <div class="pf-filter-nav-track" id="pfFilterTrack">
+            {categories.map((c, i) => (
+              <button
+                type="button"
+                class={`pf-filter-item ${i === 0 ? 'is-active' : ''}`}
+                data-filter={c.slug}
+                data-name={c.name}
+                data-count={categoryCounts[c.slug] || 0}
+                data-preview-img={previewByCategory[c.slug]?.image}
+                data-preview-name={previewByCategory[c.slug]?.name}
+                data-hover
+              >
+                <span class="pf-filter-item-num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="pf-filter-item-name">{c.name}</span>
+                <span class="pf-filter-item-count">{categoryCounts[c.slug] || 0}</span>
+              </button>
+            ))}
+            <!-- Sliding gold underline indicator -->
+            <span class="pf-filter-indicator" id="pfFilterIndicator" aria-hidden="true"></span>
+          </div>
+        </nav>
       </div>
     </div>
 
@@ -231,10 +254,45 @@ const heroImage = portfolio[0].image;
 
         var items = Array.prototype.slice.call(grid.querySelectorAll('.pf-item'));
         var empty = document.getElementById('pfEmpty');
-        var filterBtns = Array.prototype.slice.call(document.querySelectorAll('.pf-filter-btn'));
+        var filterBtns = Array.prototype.slice.call(document.querySelectorAll('.pf-filter-item'));
+        var filterTrack = document.getElementById('pfFilterTrack');
+        var filterIndicator = document.getElementById('pfFilterIndicator');
+        var filterCurrentName = document.getElementById('pfFilterCurrentName');
+        var filterCurrentCount = document.getElementById('pfFilterCurrentCount');
         var preview = document.getElementById('pfPreview');
         var previewImg = document.getElementById('pfPreviewImg');
         var previewCaption = document.getElementById('pfPreviewCaption');
+
+        // Position the sliding gold underline indicator under the active filter item
+        function positionIndicator(btn) {
+          if (!filterIndicator || !filterTrack || !btn) return;
+          var trackRect = filterTrack.getBoundingClientRect();
+          var btnRect = btn.getBoundingClientRect();
+          var offsetLeft = btnRect.left - trackRect.left + filterTrack.scrollLeft;
+          filterIndicator.style.width = btnRect.width + 'px';
+          filterIndicator.style.transform = 'translateX(' + offsetLeft + 'px)';
+        }
+
+        // Update the "Showing — Wedding · 7 frames" header live
+        function updateMeta(btn) {
+          if (!btn) return;
+          var name = btn.dataset.name || 'Semua Karya';
+          var count = btn.dataset.count || '0';
+          if (filterCurrentName) {
+            filterCurrentName.classList.add('is-flipping');
+            window.setTimeout(function () {
+              filterCurrentName.textContent = name;
+              filterCurrentName.classList.remove('is-flipping');
+            }, 200);
+          }
+          if (filterCurrentCount) {
+            filterCurrentCount.classList.add('is-flipping');
+            window.setTimeout(function () {
+              filterCurrentCount.textContent = count;
+              filterCurrentCount.classList.remove('is-flipping');
+            }, 200);
+          }
+        }
 
         // -------- 1. Reveal animation — below-fold items only (bulletproof) --------
         // Items default visible (CSS). Only items below viewport at load get observed
@@ -300,13 +358,21 @@ const heroImage = portfolio[0].image;
           if (btn.dataset.pfBound) return;
           btn.dataset.pfBound = '1';
 
-          // Click: filter
+          // Click: filter + slide indicator + update meta + auto-scroll item into view
           btn.addEventListener('click', function () {
             filterBtns.forEach(function (b) { b.classList.toggle('is-active', b === btn); });
             applyFilter(btn.dataset.filter);
+            positionIndicator(btn);
+            updateMeta(btn);
+            // Auto-scroll the clicked item into view (mobile horizontal scroll)
+            if (filterTrack && btn.scrollIntoView) {
+              try {
+                btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+              } catch (e) { /* old browsers */ }
+            }
           });
 
-          // Hover: floating preview + magnetic effect
+          // Hover: floating preview (NO magnetic transform — bersih untuk text item)
           btn.addEventListener('mouseenter', function () {
             if (!preview || !previewImg) return;
             var img = btn.dataset.previewImg;
@@ -319,17 +385,39 @@ const heroImage = portfolio[0].image;
           });
           btn.addEventListener('mouseleave', function () {
             if (preview) preview.classList.remove('is-visible');
-            btn.style.transform = '';
-          });
-
-          // Magnetic effect on cursor-near
-          btn.addEventListener('mousemove', function (e) {
-            var r = btn.getBoundingClientRect();
-            var x = e.clientX - (r.left + r.width / 2);
-            var y = e.clientY - (r.top + r.height / 2);
-            btn.style.transform = 'translate(' + (x * 0.25) + 'px, ' + (y * 0.4) + 'px)';
           });
         });
+
+        // Initialize indicator position on the active item (after render)
+        var activeBtn = filterBtns.find(function (b) { return b.classList.contains('is-active'); }) || filterBtns[0];
+        if (activeBtn) {
+          // Wait one frame for layout to settle (custom fonts, etc.)
+          window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () { positionIndicator(activeBtn); });
+          });
+        }
+
+        // Reposition indicator on window resize (debounced)
+        if (!window.__pfFilterResizeBound) {
+          window.__pfFilterResizeBound = true;
+          var resizeTimer = null;
+          window.addEventListener('resize', function () {
+            window.clearTimeout(resizeTimer);
+            resizeTimer = window.setTimeout(function () {
+              var active = document.querySelector('.pf-filter-item.is-active');
+              if (active) positionIndicator(active);
+            }, 120);
+          });
+        }
+
+        // Reposition indicator if track is scrolled (mobile horizontal scroll)
+        if (filterTrack && !filterTrack.dataset.scrollBound) {
+          filterTrack.dataset.scrollBound = '1';
+          filterTrack.addEventListener('scroll', function () {
+            var active = filterTrack.querySelector('.pf-filter-item.is-active');
+            if (active) positionIndicator(active);
+          }, { passive: true });
+        }
 
         // -------- 4. Floating preview cursor follow --------
         if (preview) {
