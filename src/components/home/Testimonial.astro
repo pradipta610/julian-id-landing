@@ -1,30 +1,296 @@
 ---
+import { url } from '../../utils/url';
+import { testimonials, aggregate, reviewTags, getFeatured } from '../../data/testimonials';
+
 interface Props {
-  label?: string;
-  quote?: string;
-  authorName?: string;
-  authorEvent?: string;
-  authorImg?: string;
+  /** Number of testimonials to feature in the rotator */
+  count?: number;
 }
 
-const {
-  label = '— Testimoni',
-  quote = "Such an amazing experience at Julian's photography. Friendly staff, great service — hasilnya bener-bener di luar ekspektasi. Setiap momen ditangkap dengan natural dan personal.",
-  authorName = 'Samantha Samiada',
-  authorEvent = 'Google Review · ★ 4.9/5 (414 ulasan)',
-  authorImg = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=85&auto=format&fit=crop',
-} = Astro.props;
+const { count = 6 } = Astro.props;
+const featured = getFeatured(count);
+
+// All names for the marquee strip (subtle background animation)
+const allNames = testimonials.map((t) => t.name);
+const marqueeNames = [...allNames, ...allNames]; // duplicate for seamless loop
 ---
-<section class="testimonial">
-  <div class="testimonial-content">
-    <div class="testimonial-label reveal-up">{label}</div>
-    <blockquote class="reveal-up">"{quote}"</blockquote>
-    <div class="testimonial-author reveal-up">
-      <div class="testimonial-author-img"><img src={authorImg} alt="" /></div>
-      <div class="testimonial-author-text">
-        <div class="testimonial-author-name">{authorName}</div>
-        <div class="testimonial-author-event">{authorEvent}</div>
+<section class="ts" aria-labelledby="ts-heading">
+  <!-- Decorative giant quote mark -->
+  <div class="ts-quote-mark" aria-hidden="true">"</div>
+
+  <!-- Background marquee of all reviewer names (subtle) -->
+  <div class="ts-name-marquee" aria-hidden="true">
+    <div class="ts-name-marquee-row">
+      {marqueeNames.map((n) => (
+        <span class="ts-name-marquee-item">{n}<span class="ts-name-marquee-dot">·</span></span>
+      ))}
+    </div>
+  </div>
+
+  <div class="ts-inner">
+    <!-- ===== Aggregate stats header ===== -->
+    <header class="ts-head">
+      <div class="ts-label reveal-up">— Suara Klien</div>
+      <h2 class="ts-heading reveal-up" id="ts-heading">
+        Lebih dari <em>414 cerita</em><br />telah kami rekam.
+      </h2>
+
+      <div class="ts-rating reveal-up">
+        <div class="ts-rating-value">
+          <span class="ts-rating-num">{aggregate.ratingValue.toFixed(1)}</span>
+          <span class="ts-rating-stars" aria-label={`${aggregate.ratingValue} dari ${aggregate.bestRating} bintang`}>
+            {Array.from({ length: 5 }).map(() => (
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            ))}
+          </span>
+        </div>
+        <div class="ts-rating-meta">
+          <div class="ts-rating-count">{aggregate.reviewCount}+ ulasan terverifikasi</div>
+          <a
+            href={aggregate.url}
+            target="_blank"
+            rel="noopener"
+            class="ts-rating-source"
+            data-hover
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <path d="M21.35 11.1H12v3.27h5.59c-.78 2.39-3.07 4.13-5.59 4.13a6.5 6.5 0 1 1 0-13c1.66 0 3.16.61 4.32 1.65l2.45-2.45A9.93 9.93 0 0 0 12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.78 0 9.6-4.06 9.6-9.78 0-.66-.06-1.16-.25-1.62z"/>
+            </svg>
+            via Google Maps
+          </a>
+        </div>
       </div>
+    </header>
+
+    <!-- ===== Featured rotator ===== -->
+    <div class="ts-rotator" id="tsRotator" aria-live="polite">
+      {featured.map((t, i) => (
+        <article
+          class={`ts-card ${i === 0 ? 'is-active' : ''}`}
+          data-ts-card
+          data-index={i}
+          itemscope
+          itemtype="https://schema.org/Review"
+          itemprop="review"
+        >
+          <meta itemprop="itemReviewed" content="Julian Photography" />
+          <div itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating" hidden>
+            <meta itemprop="ratingValue" content={String(t.rating)} />
+            <meta itemprop="bestRating" content="5" />
+          </div>
+          <meta itemprop="datePublished" content={t.dateISO} />
+
+          <div class="ts-card-meta">
+            <span class="ts-card-tag">{t.serviceLabel}</span>
+            <span class="ts-card-num">
+              <span class="ts-card-num-current">{String(i + 1).padStart(2, '0')}</span>
+              <span class="ts-card-num-sep">/</span>
+              <span class="ts-card-num-total">{String(featured.length).padStart(2, '0')}</span>
+            </span>
+          </div>
+
+          <blockquote class="ts-card-body" itemprop="reviewBody">
+            <span class="ts-card-body-text">{t.body}</span>
+          </blockquote>
+
+          <div class="ts-card-footer">
+            <div class="ts-card-author">
+              <div class="ts-card-author-avatar" aria-hidden="true">{t.name.charAt(0).toUpperCase()}</div>
+              <div class="ts-card-author-text">
+                <div class="ts-card-author-name" itemprop="author">{t.name}</div>
+                <div class="ts-card-author-meta">
+                  <span aria-label={`${t.rating} bintang`}>
+                    {Array.from({ length: t.rating }).map(() => (
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="ts-card-star"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    ))}
+                  </span>
+                  <span class="ts-card-author-dot">·</span>
+                  <span>{t.date}</span>
+                  {t.isLocalGuide && (
+                    <>
+                      <span class="ts-card-author-dot">·</span>
+                      <span class="ts-card-author-badge">Local Guide</span>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- ===== Rotator controls ===== -->
+    <div class="ts-controls">
+      <button type="button" class="ts-arrow ts-arrow-prev" id="tsPrev" aria-label="Testimoni sebelumnya" data-hover>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+          <path d="M19 12H5M11 18l-6-6 6-6" />
+        </svg>
+      </button>
+
+      <div class="ts-dots" role="tablist" aria-label="Pilih testimoni">
+        {featured.map((_, i) => (
+          <button
+            type="button"
+            class={`ts-dot ${i === 0 ? 'is-active' : ''}`}
+            data-ts-dot
+            data-index={i}
+            role="tab"
+            aria-selected={i === 0 ? 'true' : 'false'}
+            aria-label={`Testimoni ${i + 1} dari ${featured.length}`}
+            data-hover
+          >
+            <span class="ts-dot-fill"></span>
+          </button>
+        ))}
+      </div>
+
+      <button type="button" class="ts-arrow ts-arrow-next" id="tsNext" aria-label="Testimoni berikutnya" data-hover>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- ===== Review tags strip ===== -->
+    <div class="ts-tags reveal-up">
+      <div class="ts-tags-label">Sering disebut klien:</div>
+      <div class="ts-tags-list">
+        {reviewTags.map((tag) => (
+          <span class="ts-tag">
+            {tag.label}
+            <span class="ts-tag-count">{tag.count}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <!-- ===== CTA: see all ===== -->
+    <div class="ts-foot reveal-up">
+      <a href={url('/kontak/')} class="ts-cta" data-hover>
+        Mulai cerita kamu
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
+      <a
+        href={aggregate.url}
+        target="_blank"
+        rel="noopener"
+        class="ts-foot-link"
+        data-hover
+      >
+        Baca semua {aggregate.reviewCount} ulasan
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+          <path d="M7 17L17 7M9 7h8v8" />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- ===== Schema markup: AggregateRating ===== -->
+  <div itemscope itemtype="https://schema.org/Product" hidden>
+    <meta itemprop="name" content="Julian Photography Services" />
+    <div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+      <meta itemprop="ratingValue" content={String(aggregate.ratingValue)} />
+      <meta itemprop="reviewCount" content={String(aggregate.reviewCount)} />
+      <meta itemprop="bestRating" content={String(aggregate.bestRating)} />
+      <meta itemprop="worstRating" content={String(aggregate.worstRating)} />
     </div>
   </div>
 </section>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    function initTestimonialRotator() {
+      var rotator = document.getElementById('tsRotator');
+      if (!rotator) return;
+      var cards = Array.prototype.slice.call(rotator.querySelectorAll('[data-ts-card]'));
+      var dots = Array.prototype.slice.call(document.querySelectorAll('[data-ts-dot]'));
+      var prev = document.getElementById('tsPrev');
+      var next = document.getElementById('tsNext');
+      if (!cards.length) return;
+
+      var current = 0;
+      var auto = null;
+      var AUTO_MS = 7000;
+      var paused = false;
+
+      function show(idx) {
+        idx = ((idx % cards.length) + cards.length) % cards.length;
+        cards.forEach(function (c, i) {
+          c.classList.toggle('is-active', i === idx);
+          c.classList.toggle('is-prev', i === (idx - 1 + cards.length) % cards.length);
+          c.classList.toggle('is-next', i === (idx + 1) % cards.length);
+        });
+        dots.forEach(function (d, i) {
+          d.classList.toggle('is-active', i === idx);
+          d.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+        });
+        current = idx;
+      }
+
+      function startAuto() {
+        stopAuto();
+        if (paused) return;
+        auto = window.setInterval(function () { show(current + 1); }, AUTO_MS);
+      }
+      function stopAuto() { if (auto) { window.clearInterval(auto); auto = null; } }
+
+      if (prev && !prev.dataset.bound) {
+        prev.dataset.bound = '1';
+        prev.addEventListener('click', function () { show(current - 1); startAuto(); });
+      }
+      if (next && !next.dataset.bound) {
+        next.dataset.bound = '1';
+        next.addEventListener('click', function () { show(current + 1); startAuto(); });
+      }
+      dots.forEach(function (d) {
+        if (d.dataset.bound) return;
+        d.dataset.bound = '1';
+        d.addEventListener('click', function () {
+          show(parseInt(d.dataset.index || '0', 10));
+          startAuto();
+        });
+      });
+
+      // Keyboard navigation when rotator is focused
+      rotator.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft') { show(current - 1); startAuto(); }
+        if (e.key === 'ArrowRight') { show(current + 1); startAuto(); }
+      });
+
+      // Pause on hover (desktop) and when off-screen
+      var section = rotator.closest('.ts');
+      if (section) {
+        section.addEventListener('mouseenter', function () { paused = true; stopAuto(); });
+        section.addEventListener('mouseleave', function () { paused = false; startAuto(); });
+      }
+
+      // Pause when section is not visible
+      if ('IntersectionObserver' in window && section) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) { paused = false; startAuto(); }
+            else { paused = true; stopAuto(); }
+          });
+        }, { threshold: 0.25 });
+        io.observe(section);
+      } else {
+        startAuto();
+      }
+
+      // Respect reduced motion
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        stopAuto();
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTestimonialRotator);
+    } else {
+      initTestimonialRotator();
+    }
+    document.addEventListener('astro:page-load', initTestimonialRotator);
+  })();
+</script>

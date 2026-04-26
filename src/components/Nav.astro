@@ -59,6 +59,14 @@ const navLinks = [
   <div class="mobile-menu-inner">
     <div class="mobile-menu-head">
       <div class="mobile-menu-label">— Navigasi</div>
+      <button type="button" class="mobile-menu-close" id="mobileMenuClose" aria-label="Tutup menu" data-hover>
+        <span class="mobile-menu-close-label">Tutup</span>
+        <span class="mobile-menu-close-x" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M6 6l12 12M6 18L18 6" />
+          </svg>
+        </span>
+      </button>
     </div>
 
     <nav class="mobile-menu-nav" aria-label="Halaman utama">
@@ -152,6 +160,13 @@ const navLinks = [
           if (burger.classList.contains('is-open')) closeMenu();
           else openMenu();
         });
+      }
+
+      // Dedicated close button inside overlay
+      var closeBtn = document.getElementById('mobileMenuClose');
+      if (closeBtn && !closeBtn.dataset.bound) {
+        closeBtn.dataset.bound = '1';
+        closeBtn.addEventListener('click', closeMenu);
       }
 
       // Close on link click (so SPA-like nav feels right)
