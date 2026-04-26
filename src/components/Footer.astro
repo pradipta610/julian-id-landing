@@ -1,20 +1,164 @@
 ---
 import Logo from './Logo.astro';
+import { url } from '../utils/url';
+import { services } from '../data/services';
+
 const year = new Date().getFullYear();
+
+const company = [
+  { href: '/', label: 'Beranda' },
+  { href: '/tentang/', label: 'Tentang Julian' },
+  { href: '/layanan/', label: 'Semua Layanan' },
+  { href: '/karya/', label: 'Portofolio' },
+  { href: '/kontak/', label: 'Kontak & Booking' },
+];
+
+// SEO: cities served — keyword-rich for local Bali searches
+const areas = [
+  'Uluwatu', 'Ubud', 'Seminyak', 'Canggu', 'Nusa Dua',
+  'Sanur', 'Denpasar', 'Jimbaran', 'Tabanan', 'Negara',
+  'Jembrana', 'Singaraja', 'Lovina',
+];
 ---
-<footer>
-  <div class="footer-mark">
-    <Logo size={96} loading="lazy" />
+<footer itemscope itemtype="https://schema.org/LocalBusiness">
+  <!-- Hidden schema microdata fields (visible NAP exists in markup below) -->
+  <meta itemprop="name" content="Julian Photography" />
+  <meta itemprop="image" content="https://juliansphotography.com/og-image.jpg" />
+  <meta itemprop="priceRange" content="Rp 1.200.000 — Rp 25.000.000" />
+
+  <!-- Mega wordmark anchor (decorative) -->
+  <div class="footer-mega" aria-hidden="true">
+    <div class="footer-mega-text">Julian<em>.</em></div>
   </div>
-  <div class="footer-tag">Julian Photography · Studio Foto · Negara, Jembrana, Bali</div>
-  <div class="footer-meta">
-    <div>&copy; {year} Julian Photography</div>
-    <div class="footer-socials">
-      <a href="https://www.instagram.com/julian_photography/" target="_blank" rel="noopener" data-hover>IG Outdoor</a>
-      <a href="https://www.instagram.com/julianphotostudio" target="_blank" rel="noopener" data-hover>IG Studio</a>
-      <a href="https://www.facebook.com/juliankomang6" target="_blank" rel="noopener" data-hover>Facebook</a>
-      <a href="https://wa.me/6282145945051" target="_blank" rel="noopener" data-hover>WhatsApp</a>
+
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <!-- Brand block -->
+      <div class="footer-col footer-col-brand">
+        <a href={url('/')} class="footer-logo" aria-label="Julian Photography — Beranda" data-hover>
+          <Logo size={64} loading="lazy" />
+        </a>
+        <p class="footer-about">
+          <em>Julian Photography</em> — studio foto &amp; wedding di Bali sejak 2005.
+          Mengabadikan momen wedding, prewedding, maternity, newborn,
+          dan family portraits dengan sentuhan cinematic Indonesia.
+        </p>
+        <address class="footer-addr" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+          <span itemprop="streetAddress">Negara</span>,
+          <span itemprop="addressLocality">Jembrana</span><br />
+          <span itemprop="addressRegion">Bali</span>
+          <span itemprop="postalCode">82211</span> ·
+          <span itemprop="addressCountry">Indonesia</span>
+        </address>
+        <a
+          href="https://maps.google.com/?q=Julian+Photography+Negara+Jembrana+Bali"
+          target="_blank"
+          rel="noopener"
+          class="footer-map"
+          data-hover
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+            <path d="M12 22s8-7 8-13a8 8 0 1 0-16 0c0 6 8 13 8 13Z" />
+            <circle cx="12" cy="9" r="2.5" />
+          </svg>
+          Lihat di Google Maps
+        </a>
+      </div>
+
+      <!-- Layanan (SEO internal links) -->
+      <div class="footer-col">
+        <h3 class="footer-h">Layanan</h3>
+        <ul class="footer-list">
+          {services.map((s) => (
+            <li>
+              <a href={url(`/layanan/${s.slug}/`)} data-hover>
+                {s.name}
+                <span class="footer-list-arrow">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Jelajahi -->
+      <div class="footer-col">
+        <h3 class="footer-h">Jelajahi</h3>
+        <ul class="footer-list">
+          {company.map((c) => (
+            <li>
+              <a href={url(c.href)} data-hover>
+                {c.label}
+                <span class="footer-list-arrow">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <h3 class="footer-h footer-h-sub">Sosial</h3>
+        <ul class="footer-list footer-list-tight">
+          <li><a href="https://www.instagram.com/julian_photography/" target="_blank" rel="noopener" data-hover itemprop="sameAs">Instagram Outdoor<span class="footer-list-arrow">↗</span></a></li>
+          <li><a href="https://www.instagram.com/julianphotostudio" target="_blank" rel="noopener" data-hover itemprop="sameAs">Instagram Studio<span class="footer-list-arrow">↗</span></a></li>
+          <li><a href="https://www.facebook.com/juliankomang6" target="_blank" rel="noopener" data-hover itemprop="sameAs">Facebook<span class="footer-list-arrow">↗</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Kontak -->
+      <div class="footer-col">
+        <h3 class="footer-h">Kontak</h3>
+        <a
+          href="https://wa.me/6282145945051"
+          target="_blank"
+          rel="noopener"
+          class="footer-cta"
+          data-hover
+          itemprop="telephone"
+          content="+62 821 4594 5051"
+        >
+          <span class="footer-cta-label">WhatsApp</span>
+          <span class="footer-cta-num">+62 821 4594 5051</span>
+        </a>
+        <a href="tel:+6282145945051" class="footer-link" data-hover>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" />
+          </svg>
+          +62 821 4594 5051
+        </a>
+        <a href="mailto:hello@juliansphotography.com" class="footer-link" data-hover>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <path d="m3 7 9 6 9-6" />
+          </svg>
+          hello@juliansphotography.com
+        </a>
+
+        <h3 class="footer-h footer-h-sub">Jam Operasional</h3>
+        <div class="footer-hours" itemprop="openingHours" content="Mo-Sa 09:00-17:00">
+          <div><span>Senin — Sabtu</span><span>09:00 — 17:00</span></div>
+          <div><span>Minggu</span><span>By appointment</span></div>
+        </div>
+      </div>
     </div>
-    <div>Made in Bali</div>
+
+    <!-- Areas served — SEO keyword section -->
+    <div class="footer-areas">
+      <div class="footer-areas-label">— Area Liputan</div>
+      <div class="footer-areas-list">
+        {areas.map((a, i) => (
+          <>
+            <span class="footer-area-item">{a}</span>
+            {i < areas.length - 1 && <span class="footer-area-sep">·</span>}
+          </>
+        ))}
+      </div>
+      <div class="footer-areas-note">
+        Layanan tersedia di seluruh <em>Bali</em> &amp; sekitarnya. Tersedia juga untuk <em>destination</em> di luar Bali atas permintaan.
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; {year} <span itemprop="legalName">Julian Photography</span> · All rights reserved.</div>
+      <div class="footer-credit">Crafted in <em>Bali</em> · Made with care for stories.</div>
+    </div>
   </div>
 </footer>

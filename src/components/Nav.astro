@@ -1,15 +1,197 @@
 ---
 import { url } from '../utils/url';
 import Logo from './Logo.astro';
+
+const navLinks = [
+  { href: '/', label: 'Beranda' },
+  { href: '/tentang/', label: 'Tentang' },
+  { href: '/layanan/', label: 'Layanan' },
+  { href: '/karya/', label: 'Karya' },
+  { href: '/kontak/', label: 'Kontak' },
+];
 ---
 <nav>
   <a href={url('/')} class="nav-logo" data-hover aria-label="Julian Photography — Beranda">
     <Logo size={48} />
   </a>
+
+  <!-- Desktop links -->
   <div class="nav-links">
     <a href={url('/tentang/')} data-hover>Tentang</a>
     <a href={url('/layanan/')} data-hover>Layanan</a>
     <a href={url('/karya/')} data-hover>Karya</a>
     <a href={url('/kontak/')} data-hover>Kontak</a>
   </div>
+
+  <!-- Mobile hamburger trigger -->
+  <button
+    type="button"
+    class="nav-burger"
+    id="navBurger"
+    aria-label="Buka menu"
+    aria-expanded="false"
+    aria-controls="mobileMenu"
+    data-hover
+  >
+    <span class="nav-burger-line nav-burger-line-1"></span>
+    <span class="nav-burger-line nav-burger-line-2"></span>
+    <span class="nav-burger-line nav-burger-line-3"></span>
+    <span class="nav-burger-label" aria-hidden="true">Menu</span>
+  </button>
 </nav>
+
+<!-- Full-screen mobile menu overlay -->
+<div
+  id="mobileMenu"
+  class="mobile-menu"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menu utama"
+  aria-hidden="true"
+  hidden
+>
+  <div class="mobile-menu-bg"></div>
+  <div class="mobile-menu-grain"></div>
+
+  <!-- Decorative huge text -->
+  <div class="mobile-menu-bgtext" aria-hidden="true">Julian.</div>
+
+  <div class="mobile-menu-inner">
+    <div class="mobile-menu-head">
+      <div class="mobile-menu-label">— Navigasi</div>
+    </div>
+
+    <nav class="mobile-menu-nav" aria-label="Halaman utama">
+      {navLinks.map((l, i) => (
+        <a
+          href={url(l.href)}
+          class="mobile-menu-link"
+          style={`--i:${i}`}
+          data-mobile-link
+        >
+          <span class="mobile-menu-num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="mobile-menu-text">
+            <span class="mobile-menu-text-inner">{l.label}</span>
+          </span>
+          <svg class="mobile-menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      ))}
+    </nav>
+
+    <div class="mobile-menu-foot">
+      <div class="mobile-menu-foot-block">
+        <div class="mobile-menu-foot-label">Hubungi Langsung</div>
+        <a href="https://wa.me/6282145945051" target="_blank" rel="noopener" class="mobile-menu-cta" data-hover>
+          WhatsApp
+          <span>+62 821 4594 5051</span>
+        </a>
+        <a href="tel:+6282145945051" class="mobile-menu-foot-link" data-hover>+62 821 4594 5051</a>
+      </div>
+      <div class="mobile-menu-foot-block">
+        <div class="mobile-menu-foot-label">Sosial</div>
+        <div class="mobile-menu-socials">
+          <a href="https://www.instagram.com/julian_photography/" target="_blank" rel="noopener" data-hover>Instagram Outdoor</a>
+          <a href="https://www.instagram.com/julianphotostudio" target="_blank" rel="noopener" data-hover>Instagram Studio</a>
+          <a href="https://www.facebook.com/juliankomang6" target="_blank" rel="noopener" data-hover>Facebook</a>
+        </div>
+      </div>
+      <div class="mobile-menu-foot-block">
+        <div class="mobile-menu-foot-label">Studio</div>
+        <address class="mobile-menu-foot-addr">
+          Negara, Jembrana<br />Bali · Indonesia
+        </address>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    function initMobileNav() {
+      var burger = document.getElementById('navBurger');
+      var menu = document.getElementById('mobileMenu');
+      if (!burger || !menu) return;
+
+      // Mark current page link as active
+      var current = window.location.pathname.replace(/\/+$/, '/') || '/';
+      var links = menu.querySelectorAll('[data-mobile-link]');
+      links.forEach(function (a) {
+        var hrefPath = new URL(a.href, window.location.origin).pathname.replace(/\/+$/, '/') || '/';
+        if (hrefPath === current) a.classList.add('is-current');
+      });
+
+      function openMenu() {
+        menu.hidden = false;
+        // Force reflow so transition kicks in
+        void menu.offsetWidth;
+        menu.classList.add('is-open');
+        menu.setAttribute('aria-hidden', 'false');
+        burger.classList.add('is-open');
+        burger.setAttribute('aria-expanded', 'true');
+        burger.setAttribute('aria-label', 'Tutup menu');
+        document.body.classList.add('no-scroll');
+      }
+      function closeMenu() {
+        menu.classList.remove('is-open');
+        menu.setAttribute('aria-hidden', 'true');
+        burger.classList.remove('is-open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.setAttribute('aria-label', 'Buka menu');
+        document.body.classList.remove('no-scroll');
+        // Hide after animation completes
+        window.setTimeout(function () {
+          if (!menu.classList.contains('is-open')) menu.hidden = true;
+        }, 700);
+      }
+
+      if (!burger.dataset.bound) {
+        burger.dataset.bound = '1';
+        burger.addEventListener('click', function () {
+          if (burger.classList.contains('is-open')) closeMenu();
+          else openMenu();
+        });
+      }
+
+      // Close on link click (so SPA-like nav feels right)
+      links.forEach(function (a) {
+        if (a.dataset.bound) return;
+        a.dataset.bound = '1';
+        a.addEventListener('click', function () { closeMenu(); });
+      });
+
+      // ESC to close
+      if (!document.body.dataset.escBound) {
+        document.body.dataset.escBound = '1';
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && menu.classList.contains('is-open')) closeMenu();
+        });
+      }
+
+      // Close on resize to desktop
+      if (!window.__navResizeBound) {
+        window.__navResizeBound = true;
+        window.addEventListener('resize', function () {
+          if (window.innerWidth > 900 && menu.classList.contains('is-open')) closeMenu();
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMobileNav);
+    } else {
+      initMobileNav();
+    }
+    document.addEventListener('astro:page-load', initMobileNav);
+    // Ensure menu is closed on page navigation
+    document.addEventListener('astro:before-swap', function () {
+      var menu = document.getElementById('mobileMenu');
+      if (menu) {
+        menu.classList.remove('is-open');
+        menu.hidden = true;
+      }
+      document.body.classList.remove('no-scroll');
+    });
+  })();
+</script>

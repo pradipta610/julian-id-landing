@@ -97,57 +97,58 @@ const heroImage = portfolio[0].image;
     </div>
   </section>
 
-  <!-- ======================= FILTER BAR (sticky, below nav) ======================= -->
-  <div class="pf-filter" id="pfFilter">
-    <div class="pf-filter-inner">
-      {categories.map((c, i) => (
-        <button
-          type="button"
-          class={`pf-filter-btn ${i === 0 ? 'is-active' : ''}`}
-          data-filter={c.slug}
-          data-preview-img={previewByCategory[c.slug]?.image}
-          data-preview-name={previewByCategory[c.slug]?.name}
-          data-hover
-        >
-          {c.name}
-          <span class="pf-filter-btn-count">{categoryCounts[c.slug] || 0}</span>
-        </button>
-      ))}
-    </div>
-  </div>
-
   <!-- Floating cursor-follow preview (desktop only, hidden by CSS on touch) -->
   <div class="pf-preview" id="pfPreview" aria-hidden="true">
     <img id="pfPreviewImg" src="" alt="" />
     <div class="pf-preview-caption" id="pfPreviewCaption"></div>
   </div>
 
-  <!-- ======================= MASONRY GRID ======================= -->
-  <section class="pf-section">
-    <div class="pf-grid" id="pfGrid">
-      {portfolio.map((item, i) => (
-        <a
-          class={`pf-item pf-item-${item.span}`}
-          data-cat={item.category}
-          data-hover
-          style={`--i:${i}`}
-          href={item.slug ? url(`/karya/${item.slug}/`) : url(`/layanan/${item.category}/`)}
-          aria-label={`${item.title} — ${item.location}`}
-        >
-          <img src={item.image} alt={`${item.title} — ${item.location}`} loading={i < 6 ? 'eager' : 'lazy'} />
-          <span class="pf-item-cat">{serviceByCategory[item.category]?.name || item.category}</span>
-          <div class="pf-item-caption">
-            <div>
-              <div class="pf-item-caption-title">{item.title}</div>
-              <div class="pf-item-caption-meta">{item.location}</div>
-            </div>
-            <div class="pf-item-caption-meta">'{String(item.year).slice(2)}</div>
-          </div>
-        </a>
-      ))}
-      <div class="pf-empty" id="pfEmpty" hidden>Belum ada karya di kategori ini — cek lagi nanti.</div>
+  <!-- ======================= FILTER + GRID (sticky scoped to this range) ======================= -->
+  <div class="pf-range">
+    <div class="pf-filter" id="pfFilter">
+      <div class="pf-filter-inner">
+        {categories.map((c, i) => (
+          <button
+            type="button"
+            class={`pf-filter-btn ${i === 0 ? 'is-active' : ''}`}
+            data-filter={c.slug}
+            data-preview-img={previewByCategory[c.slug]?.image}
+            data-preview-name={previewByCategory[c.slug]?.name}
+            data-hover
+          >
+            {c.name}
+            <span class="pf-filter-btn-count">{categoryCounts[c.slug] || 0}</span>
+          </button>
+        ))}
+      </div>
     </div>
-  </section>
+
+    <section class="pf-section">
+      <div class="pf-grid" id="pfGrid">
+        {portfolio.map((item, i) => (
+          <a
+            class={`pf-item pf-item-${item.span}`}
+            data-cat={item.category}
+            data-hover
+            style={`--i:${i}`}
+            href={item.slug ? url(`/karya/${item.slug}/`) : url(`/layanan/${item.category}/`)}
+            aria-label={`${item.title} — ${item.location}`}
+          >
+            <img src={item.image} alt={`${item.title} — ${item.location}`} loading={i < 6 ? 'eager' : 'lazy'} />
+            <span class="pf-item-cat">{serviceByCategory[item.category]?.name || item.category}</span>
+            <div class="pf-item-caption">
+              <div>
+                <div class="pf-item-caption-title">{item.title}</div>
+                <div class="pf-item-caption-meta">{item.location}</div>
+              </div>
+              <div class="pf-item-caption-meta">'{String(item.year).slice(2)}</div>
+            </div>
+          </a>
+        ))}
+        <div class="pf-empty" id="pfEmpty" hidden>Belum ada karya di kategori ini — cek lagi nanti.</div>
+      </div>
+    </section>
+  </div>
 
   <!-- ======================= MARQUEE w/ MIX-BLEND BIG TEXT ======================= -->
   <section class="pf-marquee-section">
