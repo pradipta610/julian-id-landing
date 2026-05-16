@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const projectRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const distDir = join(projectRoot, 'dist');
 const sourceSitemap = join(distDir, 'sitemap-0.xml');
-const targetDir = join(distDir, 'id');
+const targetDir = distDir;
 const targetSitemap = join(targetDir, 'sitemap-id.xml');
 const sitemapIndex = join(distDir, 'sitemap-index.xml');
 
